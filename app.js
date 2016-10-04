@@ -12,7 +12,6 @@ app.use(express.static('public'));
 http.listen(port, function() {
 	// Display this message in the server console once the server is active
 	console.log('Listening on port ' + port);
-
 });
 
 // When a user connects over websocket,
@@ -25,7 +24,6 @@ io.on('connection', function(socket) {
 	socket.on('new line', function(data){
 		// Display the received data in the server console
 		console.log(data);
-
 		// Send the data in a message called "new line" to every connected client EXCEPT the client who sent this initial "new line" message
 		socket.broadcast.emit('new line', data);
 	});
