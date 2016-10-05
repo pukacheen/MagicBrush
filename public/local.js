@@ -2,7 +2,7 @@
 var socket = io(); 	// Note that the SocketIO client-side library was imported on line 13 of index.html,
 					// and this file (local.js) was imported on line 14 of index.html
 
-// Create a variable for the web page's canvas element, which has id="mycanvas":
+// Create a variable for the web page's canvas element, which has id="mycanvas"
 var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
