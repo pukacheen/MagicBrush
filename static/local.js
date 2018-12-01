@@ -69,7 +69,7 @@ function paint(x,y){
 	var width = 20;
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
-	radgrad.addColorStop(0, '#fff');
+	radgrad.addColorStop(0, '#0f0');
 	radgrad.addColorStop(0.5, 'rgba(0,256,0,0.5)');
 	radgrad.addColorStop(1, 'rgba(0,256,0,0)');
 	pen.fillStyle = radgrad;
