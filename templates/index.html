@@ -12,10 +12,46 @@
       <button id="toggle_button">Toggle Result</button>
       <p id="status"></p>
     </div>
-    
+
+      <div id="colorpanel">
+      <center><p>Colors</p></center>
+       <div id="contain">
+         <div class="palette red" id="red" onclick="changeColors(this)"></div>
+         <div class="palette red1" id="red1" onclick="changeColors(this)"></div>
+         <div class="palette red2" id="red2" onclick="changeColors(this)"></div>
+         <div class="palette orange" id="orange" onclick="changeColors(this)"></div>
+         <div class="palette orange1" id="orange1" onclick="changeColors(this)"></div>
+         <div class="palette orange2" id="orange2" onclick="changeColors(this)"></div>
+         <div class="palette yellow" id="yellow" onclick="changeColors(this)"></div>
+         <div class="palette yellow1" id="yellow1" onclick="changeColors(this)"></div>
+         <div class="palette yellow2" id="yellow2" onclick="changeColors(this)"></div>
+         <div class="palette green" id="green" onclick="changeColors(this)"></div>
+         <div class="palette green1" id="green1" onclick="changeColors(this)"></div>
+         <div class="palette green2" id="green2" onclick="changeColors(this)"></div>
+         <div class="palette blue" id="blue" onclick="changeColors(this)"></div>
+         <div class="palette blue1" id="blue1" onclick="changeColors(this)"></div>
+         <div class="palette blue2" id="blue2" onclick="changeColors(this)"></div>
+         <div class="palette indigo" id="indigo" onclick="changeColors(this)"></div>
+         <div class="palette indigo1" id="indigo1" onclick="changeColors(this)"></div>
+         <div class="palette indigo2" id="indigo2" onclick="changeColors(this)"></div>
+         <div class="palette purple" id="purple" onclick="changeColors(this)"></div>
+         <div class="palette purple1" id="purple1" onclick="changeColors(this)"></div>
+         <div class="palette purple2" id="purple2" onclick="changeColors(this)"></div>
+         <div class="palette black" id="black" onclick="changeColors(this)"></div>
+         <div class="palette black1" id="black1" onclick="changeColors(this)"></div>
+         <div class="palette black2" id="black2" onclick="changeColors(this)"></div>
+       </div>
+
+       <div id="erasing"><center><p>Eraser</p></center></div>
+       <div class="palette white" id="erase" onclick="changeColors(this)"></div>
+       <br />
+       </div>
+
+
     <canvas id="mycanvas" width="512" height="512"></canvas>
     <canvas id="mycanvas2" width="512" height="512"></canvas>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='colors.js') }}"></script>
     <script src="{{ url_for('static', filename='local.js') }}"></script>
 
   </body>

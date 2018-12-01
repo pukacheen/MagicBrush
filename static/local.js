@@ -6,16 +6,20 @@ var socket = io(); 	// Note that the SocketIO client-side library was imported o
 var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
-var chicagoImage = new Image;
-chicagoImage.onload = function(){
-	pen.drawImage(chicagoImage, 0, 0);
+
+function drawChicago(){
+	var chicagoImage = new Image;
+	chicagoImage.onload = function(){
+		pen.drawImage(chicagoImage, 0, 0);
+	}
+	chicagoImage.src = './chicago.jpg';
 }
-chicagoImage.src = './chicago.jpg';
+drawChicago();
 
 // Listen for mouse events on the canvas element
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', drawStuff);
-canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mousedown', sendCoordinates(startDrawing));
+canvas.addEventListener('mousemove', sendCoordinates(drawStuff));
+canvas.addEventListener('mouseup', sendCoordinates(stopDrawing));
 
 // Initializing variables for tracking user input
 var isDrawing = false;
@@ -26,10 +30,24 @@ var prevY;
 // Initializing variables for sending images to the server
 var lastSnapshot = Date.now();
 
+// wrap the position in this
+function sendCoordinates(callback) {
+    var f = function(event){
+			var rect = canvas.getBoundingClientRect();
+	    var adjustedPosition = {
+	      x: event.clientX - rect.left,
+	      y: event.clientY - rect.top
+	    };
+			callback(adjustedPosition);
+		};
+
+		return f;
+}
+
 // Run this function when the user clicks the mouse
 function startDrawing(event) {
 	// Display the click coordinates in the web browser's console
-	console.log("Clicked at " + event.clientX + ", " + event.clientY);
+	console.log("Clicked at " + event.x + ", " + event.y);
 
 	// The user began drawing, so save this state to a variable
 	isDrawing = true;
@@ -43,8 +61,8 @@ function startDrawing(event) {
 	lastSent = Date.now();
 
 	// Save the coordinates where user clicked
-	prevX = event.clientX;
-	prevY = event.clientY;
+	prevX = event.x;
+	prevY = event.y;
 }
 
 
@@ -64,14 +82,29 @@ function makePoint(point){
 	}
 }
 
+function hexToRGB(hex, alpha) {
+    var r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+
+    if (alpha === 0 || alpha) {
+        return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+    } else {
+        return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+}
+
+
 function paint(x,y){
 	// draw gradient at x,y
-	var width = 20;
+	var width = 14;
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
-	radgrad.addColorStop(0, '#0f0');
-	radgrad.addColorStop(0.5, 'rgba(0,256,0,0.5)');
-	radgrad.addColorStop(1, 'rgba(0,256,0,0)');
+
+	radgrad.addColorStop(0, hexToRGB(colors, 1));
+	radgrad.addColorStop(0.5, hexToRGB(colors, 0.5));
+	radgrad.addColorStop(1, hexToRGB(colors, 0));
+
 	pen.fillStyle = radgrad;
 	pen.fillRect(x-width, y-width, 2* width, 2*width);
 }
@@ -95,12 +128,9 @@ function drawStuff(event) {
 	if (isDrawing && Date.now() - lastSent > 30) {
 
 		// paint the new stuff
-		var newX = event.clientX;
-		var newY = event.clientY;
+		var newX = event.x;
+		var newY = event.y;
 
-		// pen.beginPath()
-		// linePaint()...
-		// pen.stroke()
 	  marchPaint({
 			x: prevX,
 			y: prevY
@@ -130,13 +160,14 @@ function stopDrawing(event) {
 	isDrawing = false;
 
 	// Display the current coordinates in the web browser's console
-	console.log("Stop: " + event.clientX + ", " + event.clientY);
+	console.log("Stop: " + event.x + ", " + event.y);
 }
 
 
 function redrawPoints(points){
 	// clear the canvas
 	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
+	drawChicago();
 
 	// draw dots for every point
 	for(var i=0;i<points.length;i++){
@@ -272,7 +303,7 @@ socket.on('ack', function(data){
 	server_ack = data + 1;
 })
 
-THRESHOLD = 2300;
+var THRESHOLD = 2300;
 function sendImage(){
 	if (Date.now() - lastSnapshot > THRESHOLD && (server_ack >= current_id)){
 		console.log('sending data! -----> ')
