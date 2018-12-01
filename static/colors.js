@@ -52,10 +52,10 @@ function changeColors(palette) {
 			colors = "#000000";
 			break;
 		case "black1":
-			colors = "#545454";
+			colors = "#333333";
 			break;
 		case "black2":
-			colors = "#B2B2B2";
+			colors = "#666666";
 			break;
 		case "yellow":
 			colors = "#FFFF00";
@@ -75,7 +75,13 @@ function changeColors(palette) {
 		case "purple2":
 			colors = "#E3ABCE";
 			break;
-		case "erase":
+		case "grey":
+			colors = "#999999";
+			break;
+		case "grey2":
+			colors = "#CCCCCC";
+			break;
+		case "white":
 			colors = "#FFFFFF";
 			break;
 	}
