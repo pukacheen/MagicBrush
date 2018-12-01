@@ -44,7 +44,7 @@ def clear():
 
 @socketio.on('draw')
 def update_drawing(data):
-    print(len(points))
+    print("We have", len(points), "points on the canvas")
 
     points.append(data)
     emit('draw', data, broadcast=True)

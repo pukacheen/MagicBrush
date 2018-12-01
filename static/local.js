@@ -18,6 +18,9 @@ var lastSent;
 var prevX;
 var prevY;
 
+// Initializing variables for sending images to the server
+var lastSnapshot = Date.now();
+
 // Run this function when the user clicks the mouse
 function startDrawing(event) {
 	// Display the click coordinates in the web browser's console
@@ -102,8 +105,7 @@ function drawStuff(event) {
 		})
 
 		// tell the server what's going on
-		var data = canvas.toDataURL('image/png');
-		socket.emit('image', data);
+		sendImage()
 
 		// Update lastSent to the current timestamp
 		lastSent = Date.now();
@@ -176,4 +178,15 @@ clear.onclick = function(event){
 	// tell the server what's going on
 	var data = canvas.toDataURL('image/png');
 	socket.emit('image', data);
+}
+
+THRESHOLD = 100;
+function sendImage(){
+	if (Date.now() - lastSnapshot > THRESHOLD){
+		console.log('sending data! -----> ')
+		var data = canvas.toDataURL('image/png');
+		socket.emit('image', data);
+
+		lastSnapshot = Date.now();
+	}
 }
