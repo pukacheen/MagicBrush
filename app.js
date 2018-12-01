@@ -19,9 +19,9 @@ var points = [];
 // When a user connects over websocket,
 io.on('connection', function(socket) {
 
-	// Display this message in the server console
+	// update the new user!
 	console.log('A user connected!');
-	socket.broadcast.emit('new data', points);
+	socket.emit('new data', points);
 
 	// when the server receives a clear!
 	socket.on('clear', function(){
@@ -36,7 +36,7 @@ io.on('connection', function(socket) {
 
 		console.log(points.length);
 
-		// update the points
+		// update the points for everyone else
 		points.push(data);
 		socket.broadcast.emit('draw', data)
 	});

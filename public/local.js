@@ -144,6 +144,10 @@ function redrawPoints(points){
 	}
 }
 
+socket.on('connect', function(){
+	console.log("Robot 1, reporting for duty!");
+});
+
 socket.on('new data', function(data){
 	console.log("received data!");
 	redrawPoints(data);
