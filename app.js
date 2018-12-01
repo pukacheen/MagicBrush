@@ -21,6 +21,7 @@ io.on('connection', function(socket) {
 
 	// Display this message in the server console
 	console.log('A user connected!');
+	socket.broadcast.emit('new data', points);
 
 	// when the server receives a clear!
 	socket.on('clear', function(){
@@ -37,7 +38,7 @@ io.on('connection', function(socket) {
 
 		// update the points
 		points.push(data);
-		socket.broadcast.emit('new data', points);
+		socket.broadcast.emit('draw', data)
 	});
 
 

@@ -147,7 +147,19 @@ function redrawPoints(points){
 socket.on('new data', function(data){
 	console.log("received data!");
 	redrawPoints(data);
+});
 
+socket.on('draw', function(data){
+	console.log("drawing");
+
+	var point = data;
+	marchPaint({
+		x: point.fromX,
+		y: point.fromY
+	}, {
+		x: point.toX,
+		y: point.toY
+	});
 })
 
 var clear = document.getElementById('clear_button');
