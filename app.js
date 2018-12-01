@@ -22,6 +22,14 @@ io.on('connection', function(socket) {
 	// Display this message in the server console
 	console.log('A user connected!');
 
+	// when the server receives a clear!
+	socket.on('clear', function(){
+		console.log("ok");
+
+		points = [];
+		socket.broadcast.emit('new data', points);
+	});
+
 	// When the server receives a message named "new line",
 	socket.on('draw', function(data){
 
@@ -31,5 +39,6 @@ io.on('connection', function(socket) {
 		points.push(data);
 		socket.broadcast.emit('new data', points);
 	});
+
 
 });	// End of SocketIO code

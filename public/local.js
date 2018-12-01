@@ -39,38 +39,80 @@ function startDrawing(event) {
 	prevY = event.clientY;
 }
 
+
+// utility functions for points
+
+function distanceBetween(point1, point2) {
+  return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+}
+function angleBetween(point1, point2) {
+  return Math.atan2( point2.x - point1.x, point2.y - point1.y );
+}
+
+function makePoint(point){
+	return {
+		x: point.toX,
+		y: point.toY
+	}
+}
+
+function paint(x,y){
+	// draw gradient at x,y
+	var width = 20;
+	var radgrad = pen.createRadialGradient(
+		x,y,width/2,x,y,width);
+	radgrad.addColorStop(0, '#000');
+	radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+	radgrad.addColorStop(1, 'rgba(0,0,0,0)');
+	pen.fillStyle = radgrad;
+	pen.fillRect(x-width, y-width, 2* width, 2*width);
+}
+
+function marchPaint(p1, p2){
+  var dist = distanceBetween(p1, p2);
+  var angle = angleBetween(p1, p2);
+
+	// step forward by 5 pixels when adding points
+	var x,y;
+	for(var t=0; t<dist; t+=5){
+	    x = p1.x + (Math.sin(angle) * t);
+	    y = p1.y + (Math.cos(angle) * t);
+			paint(x,y);
+	}
+}
+
 // Run this function when the user moves the mouse
 function drawStuff(event) {
 	// If the user is holding down the mouse button (isDrawing) AND it's been more than 30 milliseconds since we notified the server
 	if (isDrawing && Date.now() - lastSent > 30) {
-		// - Draw a line from the last saved coordinates to the newly saved coordinates
-		// pen.beginPath();
-		// pen.moveTo(prevX, prevY);
-		// pen.lineTo(event.clientX, event.clientY);
-		// pen.stroke();
 
-		// set the pen properties
-	  var radgrad = pen.createRadialGradient(
-	    event.clientX,event.clientY,10,event.clientX,event.clientY,20);
+		// paint the new stuff
+		var newX = event.clientX;
+		var newY = event.clientY;
 
-	  radgrad.addColorStop(0, '#000');
-	  radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
-	  radgrad.addColorStop(1, 'rgba(0,0,0,0)');
-	  pen.fillStyle = radgrad;
-		pen.fillRect(event.clientX-20, event.clientY-20, 40, 40);
+		// pen.beginPath()
+		// linePaint()...
+		// pen.stroke()
+	  marchPaint({
+			x: prevX,
+			y: prevY
+		},{
+			x: newX,
+			y: newY
+		})
 
 		// Display the previous and current coordinates in the web browser's console
-		console.log("Draw from " + prevX + ", " + prevY + " to " + event.clientX + ", " + event.clientY);
+		console.log("Draw from " + prevX + ", " + prevY + " to " + newX + ", " + newY);
 
 		// Update lastSent to the current timestamp
 		lastSent = Date.now();
 
 		// Send message named "new line" to the server with an object containing previous and current coordinates
-		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: event.clientX, toY: event.clientY});
+		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: newX, toY: newY});
 
 		// Replace previous coordinates with the current coordinates (we need this to draw a continuous line)
-		prevX = event.clientX;
-		prevY = event.clientY;
+		prevX = newX;
+		prevY = newY;
 	}
 }
 
@@ -83,42 +125,35 @@ function stopDrawing(event) {
 	console.log("Stop: " + event.clientX + ", " + event.clientY);
 }
 
-function draw_gradient(points){
+
+function redrawPoints(points){
 	// clear the canvas
 	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
 
 	// draw dots for every point
 	for(var i=0;i<points.length;i++){
+		var point = points[i];
+		marchPaint({
+			x: point.fromX,
+			y: point.fromY
+		}, {
+			x: point.toX,
+			y: point.toY
+		});
 
-		var data = points[i];
-		// set the pen properties
-	  var radgrad = pen.createRadialGradient(
-	    data.toX,data.toY,10,data.toX,data.toY,20);
-
-	  radgrad.addColorStop(0, '#000');
-	  radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
-	  radgrad.addColorStop(1, 'rgba(0,0,0,0)');
-	  pen.fillStyle = radgrad;
-		pen.fillRect(data.toX-20, data.toY-20, 40, 40);
 	}
-}
-
-function draw(points){
-	// clear the canvas
-	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
-
-	// draw dots for every point
-	pen.beginPath();
-	for(var i=0; i<points.length; i++){
-		var data = points[i];
-		pen.moveTo(data.fromX, data.fromY);
-		pen.lineTo(data.toX, data.toY);
-	}
-	pen.stroke();
 }
 
 socket.on('new data', function(data){
 	console.log("received data!");
-	draw_gradient(data);
+	redrawPoints(data);
 
 })
+
+var clear = document.getElementById('clear_button');
+clear.onclick = function(event){
+	socket.emit('clear');
+
+	// clear my screen
+	redrawPoints([]);
+}
