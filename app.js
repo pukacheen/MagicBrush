@@ -41,5 +41,8 @@ io.on('connection', function(socket) {
 		socket.broadcast.emit('draw', data)
 	});
 
+	socket.on('stream image', function(data){
+		console.log(data);
+	});
 
 });	// End of SocketIO code

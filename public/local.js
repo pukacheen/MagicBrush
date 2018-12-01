@@ -173,3 +173,23 @@ clear.onclick = function(event){
 	// clear my screen
 	redrawPoints([]);
 }
+
+
+//// streaming images to the server
+let mediaStream = canvas.captureStream(30); // 30 FPS
+let mediaRecorder = new MediaRecorder(mediaStream, {
+  mimeType: 'video/webm;codecs=h264',
+  videoBitsPerSecond: 3 * 1024 * 1024 // size of canvas... it's huge
+});
+
+mediaRecorder.addEventListener('dataavailable', (e) => {
+	console.log("data available!");
+  socket.emit('stream image', e.data);
+});
+
+mediaRecorder.start(200); // Start recording, and dump data 5 times a second
+
+socket.on('close', function(){
+	console.log("Stopping recording...")
+	mediaRecorder.stop();
+})

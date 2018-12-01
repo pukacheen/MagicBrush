@@ -3,6 +3,9 @@ body {
 	padding: 0;
 	overflow: hidden; /* Prevent scrolling on the page */
 }
+button {
+	display: block;
+}
 canvas {
 	margin: 0;
 	padding: 0;
