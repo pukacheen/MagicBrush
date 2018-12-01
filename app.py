@@ -1,8 +1,6 @@
 from flask import Flask, render_template, url_for
 from flask_socketio import SocketIO, send, emit
 
-from tensorstyle import TransformNet
-
 import os
 
 app = Flask(__name__, static_url_path='')
@@ -10,7 +8,17 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-emperor_penguin = TransformNet()
+def loadTransformNet():
+    """Lazy loading of transform Net
+    """
+    from tensorstyle import TransformNet
+    return TransformNet()
+
+# DEVELOPMENT PURPOSES ONLY
+# set to None if you don't want to load the TransformNet
+emperor_penguin = None
+# emperor_penguin = loadTransformNet()
+
 points = []
 
 @app.route('/')
@@ -38,6 +46,7 @@ def client_connected():
 
 @socketio.on('clear')
 def clear():
+    global points
     print('ok')
     points = []
     emit('new data', points, broadcast=True)
@@ -55,11 +64,12 @@ def receive_image(package):
     emit('ack', i)
     print('Received data {}!'.format(i))
 
-    base64_picture = data.split(',')[1]
-    original, result = emperor_penguin.decode(base64_picture)
-    print('Sending...', 'data:image/png;base64,' + result[:10])
-    emit('result', 'data:image/png;base64,' + result)
-    emit('original', 'data:image/png;base64,' + original)
+    if emperor_penguin is not None:
+        base64_picture = data.split(',')[1]
+        original, result = emperor_penguin.decode(base64_picture)
+        print('Sending...', 'data:image/png;base64,' + result[:10])
+        emit('result', 'data:image/png;base64,' + result)
+        emit('original', 'data:image/png;base64,' + original)
 
 
 if __name__ == '__main__':
