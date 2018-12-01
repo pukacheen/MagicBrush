@@ -97,7 +97,10 @@ function hexToRGB(hex, alpha) {
 
 function paint(x,y){
 	// draw gradient at x,y
-	var width = 14;
+	var width = brush_size;
+	if (width == 0) {
+		width = 10;
+	}
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
 

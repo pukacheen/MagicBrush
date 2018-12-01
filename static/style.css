@@ -25,7 +25,7 @@ canvas {
 
 #colorpanel {
   width: 130px;
-  height: 450px;
+  height: 480px;
   float: left;
   margin-right: 18px;
   border: 1px solid black;
@@ -33,7 +33,7 @@ canvas {
 
 #contain {
   padding-left: 13px;
-  height: 280px;
+  height: 320px;
 }
 
 .palette {
@@ -71,3 +71,25 @@ canvas {
 .grey { background: #999999; }
 .grey1 { background: #CCCCCC; }
 .white { background: white; }
+
+.brush {
+  float: left;
+  margin: 6px;
+  background: black;
+  border-radius: 50%;
+}
+
+.small {
+  width: 10px;
+  height: 10px;
+}
+
+.medium {
+  width: 20px;
+  height: 20px;
+}
+
+.large {
+  width: 30px;
+  height: 30px;
+}

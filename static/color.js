@@ -1,4 +1,3 @@
-
 //Color palette
 window.colors = "";
 function changeColors(palette) {
