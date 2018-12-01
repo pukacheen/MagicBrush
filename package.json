@@ -1,0 +1,12 @@
+{
+	"name": "socket-paint-demo",
+	"version": "0.1.0",
+	"description": "A sample app for Learn to Code LA that lets users paint on a collaborative canvas in real time over a WebSocket connection. Built with NodeJS, Express and SocketIO.",
+	"dependencies": {
+		"express": "^4.10.2",
+		"socket.io": "^1.4.8"
+	},
+	"scripts": {
+		"start": "node app.js"
+	}
+}
