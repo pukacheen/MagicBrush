@@ -101,8 +101,9 @@ function drawStuff(event) {
 			y: newY
 		})
 
-		// Display the previous and current coordinates in the web browser's console
-		console.log("Draw from " + prevX + ", " + prevY + " to " + newX + ", " + newY);
+		// tell the server what's going on
+		var data = canvas.toDataURL('image/png');
+		socket.emit('image', data);
 
 		// Update lastSent to the current timestamp
 		lastSent = Date.now();
@@ -140,7 +141,6 @@ function redrawPoints(points){
 			x: point.toX,
 			y: point.toY
 		});
-
 	}
 }
 
@@ -149,12 +149,12 @@ socket.on('connect', function(){
 });
 
 socket.on('new data', function(data){
-	console.log("received data!");
+	console.log("received data from other clients!");
 	redrawPoints(data);
 });
 
 socket.on('draw', function(data){
-	console.log("drawing");
+	// console.log("drawing");
 
 	var point = data;
 	marchPaint({
@@ -172,31 +172,8 @@ clear.onclick = function(event){
 
 	// clear my screen
 	redrawPoints([]);
-}
 
-function takePicture(){
+	// tell the server what's going on
 	var data = canvas.toDataURL('image/png');
 	socket.emit('image', data);
-}
-setInterval(takePicture, 100);
-
-function setup_mediaRecorder(){
-	//// streaming images to the server
-	let mediaStream = canvas.captureStream(30); // 30 FPS
-	let mediaRecorder = new MediaRecorder(mediaStream, {
-	  mimeType: 'video/webm;codecs=h264',
-	  videoBitsPerSecond: 3 * 1024 * 1024 // size of canvas... it's huge
-	});
-
-	mediaRecorder.addEventListener('dataavailable', (e) => {
-		console.log("data available!");
-	  socket.emit('stream image', e.data);
-	});
-
-	mediaRecorder.start(200); // Start recording, and dump data 5 times a second
-
-	socket.on('close', function(){
-		console.log("Stopping recording...")
-		mediaRecorder.stop();
-	})
 }
