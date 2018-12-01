@@ -23,7 +23,7 @@ io.on('connection', function(socket) {
 	console.log('A user connected!');
 
 	// When the server receives a message named "new line",
-	socket.on('foo line', function(data){
+	socket.on('draw', function(data){
 
 		console.log(points.length);
 

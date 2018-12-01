@@ -57,7 +57,7 @@ function drawStuff(event) {
 		lastSent = Date.now();
 
 		// Send message named "new line" to the server with an object containing previous and current coordinates
-		socket.emit('foo line', {fromX: prevX, fromY: prevY, toX: event.clientX, toY: event.clientY});
+		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: event.clientX, toY: event.clientY});
 
 		// Replace previous coordinates with the current coordinates (we need this to draw a continuous line)
 		prevX = event.clientX;
