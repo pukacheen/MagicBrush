@@ -6,6 +6,11 @@ var socket = io(); 	// Note that the SocketIO client-side library was imported o
 var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
+var chicagoImage = new Image;
+chicagoImage.onload = function(){
+	pen.drawImage(chicagoImage, 0, 0);
+}
+chicagoImage.src = './chicago.jpg';
 
 // Listen for mouse events on the canvas element
 canvas.addEventListener('mousedown', startDrawing);

@@ -5,7 +5,7 @@ from tensorstyle import TransformNet
 
 import os
 
-app = Flask(__name__, static_url_path='/public')
+app = Flask(__name__, static_url_path='')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
