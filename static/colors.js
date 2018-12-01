@@ -40,7 +40,7 @@ function changeColors(palette) {
 			colors = "#9C96C9";
 			break;
 		case "green":
-			colors = "#00FF00";
+			colors = "#008000";
 			break;
 		case "green1":
 			colors = "#97CD7E";
