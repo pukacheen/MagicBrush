@@ -4,7 +4,7 @@ A sample app for Learn Teach Code that lets users paint on a collaborative canva
 
 Draw on the left panel, and see the result on the right! there is about 2 seconds of latency if you're doing it on a computer with no CPU. Which is... not bad!
 
-<img src="docs/hi.png">
+<img src="docs/hi2.png">
 
 # Setup w/ Google Cloud
 Setting up a VM is hard if you're doing it for the first time. Google has a sort-of-good documentation [here](https://cloud.google.com/deep-learning-vm/docs/quickstart-marketplace), which gets you a VM with Tensorflow already installed.
