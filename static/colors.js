@@ -78,7 +78,7 @@ function changeColors(palette) {
 		case "grey":
 			colors = "#999999";
 			break;
-		case "grey2":
+		case "grey1":
 			colors = "#CCCCCC";
 			break;
 		case "white":
