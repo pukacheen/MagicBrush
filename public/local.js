@@ -26,6 +26,12 @@ function startDrawing(event) {
 	// The user began drawing, so save this state to a variable
 	isDrawing = true;
 
+	// set the pen properties
+  pen.lineWidth = 10;
+  pen.lineJoin = pen.lineCap = 'round';
+  pen.shadowBlur = 10;
+  pen.shadowColor = 'rgb(0, 0, 0)';
+
 	// Save the current timestamp
 	lastSent = Date.now();
 
@@ -51,7 +57,7 @@ function drawStuff(event) {
 		lastSent = Date.now();
 
 		// Send message named "new line" to the server with an object containing previous and current coordinates
-		socket.emit('new line', {fromX: prevX, fromY: prevY, toX: event.clientX, toY: event.clientY});
+		socket.emit('foo line', {fromX: prevX, fromY: prevY, toX: event.clientX, toY: event.clientY});
 
 		// Replace previous coordinates with the current coordinates (we need this to draw a continuous line)
 		prevX = event.clientX;
@@ -68,14 +74,21 @@ function stopDrawing(event) {
 	console.log("Stop: " + event.clientX + ", " + event.clientY);
 }
 
-// Run this function when WebSocket messages called "new line" are receieved
-socket.on('new line', function(data){
-	// Display the received data in the web browser's console
-	console.log(data);
-
-	// Draw a line using the data sent from the server, from every other users' previous to current coordinates
+function redraw(points){
+	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
 	pen.beginPath();
-	pen.moveTo(data.fromX, data.fromY);
-	pen.lineTo(data.toX, data.toY);
+
+	var data,i;
+	for(i=0; i<points.length; i++){
+		data = points[i];
+		pen.moveTo(data.fromX, data.fromY);
+		pen.lineTo(data.toX, data.toY);
+	}
 	pen.stroke();
-});
+}
+
+socket.on('new data', function(data){
+	console.log(data);
+	redraw(data);
+
+})
