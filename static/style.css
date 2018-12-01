@@ -1,7 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	overflow: hidden; /* Prevent scrolling on the page */
+	/* overflow: hidden; /* Prevent scrolling on the page */ */
 }
 button {
 	display: block;
@@ -9,4 +9,15 @@ button {
 canvas {
 	margin: 0;
 	padding: 0;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+}
+#mycanvas {
+	border: 2px solid blue;
+}
+#mycanvas2 {
+	border: 2px solid green;
 }

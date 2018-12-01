@@ -50,10 +50,16 @@ def update_drawing(data):
     emit('draw', data, broadcast=True)
 
 @socketio.on('image')
-def receive_image(data):
-    print('Received data!')
+def receive_image(package):
+    i, data = package['image_id'], package['image']
+    emit('ack', i)
+    print('Received data {}!'.format(i))
+
     base64_picture = data.split(',')[1]
-    emperor_penguin.decode(base64_picture)
+    original, result = emperor_penguin.decode(base64_picture)
+    print('Sending...', 'data:image/png;base64,' + result[:10])
+    emit('result', 'data:image/png;base64,' + result)
+    emit('original', 'data:image/png;base64,' + original)
 
 
 if __name__ == '__main__':

@@ -168,6 +168,79 @@ socket.on('draw', function(data){
 	});
 })
 
+
+
+/*
+*
+*		Canvas on the right
+*
+*/
+
+var myCanvas = document.getElementById('mycanvas2');
+var ctx = myCanvas.getContext('2d');
+
+var showResult = true;
+var imgResult = new Image;
+var imgOriginal = new Image;
+
+imgResult.onload = function(){
+	if(showResult){
+		ctx.drawImage(imgResult,0,0);
+	}
+}
+
+imgOriginal.onload = function(){
+	if(!showResult){
+		ctx.drawImage(imgOriginal,0,0);
+	}
+}
+
+function redrawResult(){
+	console.log('redrawing...')
+	if(showResult){
+		ctx.drawImage(imgResult,0,0);
+	}else{
+		ctx.drawImage(imgOriginal,0,0);
+	}
+}
+
+socket.on('result', function(data){
+	console.log('Styled data!');
+	// console.log(data);
+	imgResult.src = data;
+	redrawResult();
+})
+
+socket.on('original', function(data){
+	console.log('Original data!');
+	// console.log(data);
+	imgOriginal.src = data;
+	redrawResult();
+
+})
+
+
+
+/*
+*
+*		Buttons
+*
+*/
+
+var toggle = document.getElementById('toggle_button');
+toggle.onclick = function(event){
+	showResult = !showResult;
+
+	redrawResult();
+
+	if(showResult){
+		console.log("Showing result");
+	}else{
+		console.log("Showing transform net inputs");
+	}
+}
+
+
 var clear = document.getElementById('clear_button');
 clear.onclick = function(event){
 	socket.emit('clear');
@@ -176,17 +249,39 @@ clear.onclick = function(event){
 	redrawPoints([]);
 
 	// tell the server what's going on
-	var data = canvas.toDataURL('image/png');
-	socket.emit('image', data);
+	sendImage();
 }
 
-THRESHOLD = 100;
+
+/*
+*
+*		Sending the image
+*
+*/
+
+// this is rate limiting. in the future, we want to send a LOT of image, and get them back faster!
+var p = document.getElementById('status');
+var current_id = 0;
+var server_ack = 0;
+socket.on('ack', function(data){
+	server_ack = data + 1;
+})
+
+THRESHOLD = 2300;
 function sendImage(){
-	if (Date.now() - lastSnapshot > THRESHOLD){
+	if (Date.now() - lastSnapshot > THRESHOLD && (server_ack >= current_id)){
 		console.log('sending data! -----> ')
 		var data = canvas.toDataURL('image/png');
-		socket.emit('image', data);
+		socket.emit('image', {
+			'image': data,
+			'image_id': current_id
+		});
 
 		lastSnapshot = Date.now();
+		current_id += 1;
+		p.innerHTML = "Sent:" + current_id + ", Processed:" + server_ack;
 	}
 }
+
+// check last sent image
+setInterval(sendImage, 100);

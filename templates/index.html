@@ -7,8 +7,14 @@
   </head>
 
   <body>
-    <button id="clear_button">Clear</button>
-    <canvas id="mycanvas" width="1024" height="1024"></canvas>
+    <div class="container">
+      <button id="clear_button">Clear</button>
+      <button id="toggle_button">Toggle Result</button>
+      <p id="status"></p>
+    </div>
+    
+    <canvas id="mycanvas" width="512" height="512"></canvas>
+    <canvas id="mycanvas2" width="512" height="512"></canvas>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='local.js') }}"></script>
 

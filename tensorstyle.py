@@ -15,9 +15,26 @@ from time import time
 
 import matplotlib.pyplot as plt
 
-def save_img(out_path, img):
+def normalize(img):
+    """Convert a [0,255] image to [0,1] image
+    """
     img = np.clip(img, 0, 255).astype(np.uint8)
-    scipy.misc.imsave(out_path, img)
+    return img / 255
+
+
+def encode(pixels):
+    """pixels is a (512, 512) array
+    """
+    # save the image to a bytes buffer
+    buffered = BytesIO()
+    image = Image.fromarray(pixels.astype('uint8'))
+    image = image.convert('RGB')
+    image.save(buffered, format="PNG")
+
+    # decode the bytes as a string
+    img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+    return img_str
 
 class TransformNet:
 
@@ -65,6 +82,7 @@ class TransformNet:
         X[0] = image
 
         _preds = self.sess.run(self.preds, feed_dict={self.img_placeholder: X})
+        _preds = np.clip(_preds[0], 0, 255).astype(np.uint8)
         return _preds
 
     def decode(self, base64img):
@@ -73,32 +91,21 @@ class TransformNet:
         image_64_decode = base64.decodebytes(base64img.encode('utf-8'))
         image = Image.open(BytesIO(image_64_decode))
 
-        # resize the image to a reasonable size
-        # (512 x 512)?
+        # resize, and convert to RGB
         image = image.resize(self.img_shape[:2], Image.ANTIALIAS)
         image = image.convert('RGB')
-        nparr = np.array(image, dtype=np.float32)/256
-        nparr = nparr[:,:,:3] # skip the fourth channel
 
-        # print how big the image is
-        print(nparr.shape)
+        nparr = np.array(image)
+        nparr = nparr[:,:,:3]
 
         start = time()
         result = self.run_network(nparr)
         elapsed = time() - start
+        self.latest_time = elapsed
+
         print('Stylized picture took {} seconds:'.format(elapsed), result.shape)
-
-        plt.subplot(1,2,1)
-        plt.imshow(nparr)
-        plt.subplot(1,2,2)
-        plt.imshow(result[0])
-        plt.savefig('hello{}.png'.format(self.i))
-
-        self.i += 1
-
-        if self.i == 10:
-            print("that's it!")
-            # self.close()
+        
+        return encode(nparr), encode(result)
 
 
     def close(self):
