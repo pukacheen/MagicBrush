@@ -7,14 +7,14 @@ var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
 
-function drawChicago(){
-	var chicagoImage = new Image;
-	chicagoImage.onload = function(){
-		pen.drawImage(chicagoImage, 0, 0);
+function drawBase(){
+	var baseImage = new Image;
+	baseImage.onload = function(){
+		pen.drawImage(baseImage, 0, 0);
 	}
-	chicagoImage.src = './chicago.jpg';
+	baseImage.src = './pikachu.jpg';
 }
-drawChicago();
+drawBase();
 
 // Listen for mouse events on the canvas element
 canvas.addEventListener('mousedown', sendCoordinates(startDrawing));
@@ -167,7 +167,7 @@ function stopDrawing(event) {
 function redrawPoints(points){
 	// clear the canvas
 	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
-	drawChicago();
+	drawBase();
 
 	// draw dots for every point
 	for(var i=0;i<points.length;i++){
