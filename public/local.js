@@ -61,9 +61,9 @@ function paint(x,y){
 	var width = 20;
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
-	radgrad.addColorStop(0, '#000');
-	radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
-	radgrad.addColorStop(1, 'rgba(0,0,0,0)');
+	radgrad.addColorStop(0, '#fff');
+	radgrad.addColorStop(0.5, 'rgba(0,256,0,0.5)');
+	radgrad.addColorStop(1, 'rgba(0,256,0,0)');
 	pen.fillStyle = radgrad;
 	pen.fillRect(x-width, y-width, 2* width, 2*width);
 }
@@ -174,22 +174,29 @@ clear.onclick = function(event){
 	redrawPoints([]);
 }
 
+function takePicture(){
+	var data = canvas.toDataURL('image/png');
+	socket.emit('image', data);
+}
+setInterval(takePicture, 100);
 
-//// streaming images to the server
-let mediaStream = canvas.captureStream(30); // 30 FPS
-let mediaRecorder = new MediaRecorder(mediaStream, {
-  mimeType: 'video/webm;codecs=h264',
-  videoBitsPerSecond: 3 * 1024 * 1024 // size of canvas... it's huge
-});
+function setup_mediaRecorder(){
+	//// streaming images to the server
+	let mediaStream = canvas.captureStream(30); // 30 FPS
+	let mediaRecorder = new MediaRecorder(mediaStream, {
+	  mimeType: 'video/webm;codecs=h264',
+	  videoBitsPerSecond: 3 * 1024 * 1024 // size of canvas... it's huge
+	});
 
-mediaRecorder.addEventListener('dataavailable', (e) => {
-	console.log("data available!");
-  socket.emit('stream image', e.data);
-});
+	mediaRecorder.addEventListener('dataavailable', (e) => {
+		console.log("data available!");
+	  socket.emit('stream image', e.data);
+	});
 
-mediaRecorder.start(200); // Start recording, and dump data 5 times a second
+	mediaRecorder.start(200); // Start recording, and dump data 5 times a second
 
-socket.on('close', function(){
-	console.log("Stopping recording...")
-	mediaRecorder.stop();
-})
+	socket.on('close', function(){
+		console.log("Stopping recording...")
+		mediaRecorder.stop();
+	})
+}
