@@ -75,8 +75,9 @@ class TransformNet:
 
         # resize the image to a reasonable size
         # (512 x 512)?
-        image = image.resize((512, 512), Image.ANTIALIAS)
-        nparr = np.array(image, dtype=np.float32)
+        image = image.resize(self.img_shape[:2], Image.ANTIALIAS)
+        image = image.convert('RGB')
+        nparr = np.array(image, dtype=np.float32)/256
         nparr = nparr[:,:,:3] # skip the fourth channel
 
         # print how big the image is
@@ -97,7 +98,7 @@ class TransformNet:
 
         if self.i == 10:
             print("that's it!")
-            self.close()
+            # self.close()
 
 
     def close(self):
