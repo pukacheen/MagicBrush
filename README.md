@@ -1,4 +1,4 @@
-# neural-style-paint-demo
+# MagicBrush
 
 A sample app for Learn Teach Code that lets users paint on a collaborative canvas in real time over a WebSocket connection. Built with NodeJS, Express and SocketIO.
 
@@ -22,12 +22,12 @@ git clone the project
 
 install flask (Note: you *have* to use `pip3`! Otherwise flask will complain)
 ```
-pip3 install -r requirements.txt
+pip3 install -r MagicBrush/requirements.txt
 ```
 
 get the checkpoints from somewhere (google cloud?) and put them in the directory
 ```
-cd socketio-paint-demo
+cd MagicBrush
 mkdir checkpoints
 gsutil cp gs://transformer-results-bucket/training/fast_style_transfer-1/* checkpoints
 ```
