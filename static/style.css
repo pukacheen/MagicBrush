@@ -41,6 +41,7 @@ canvas {
   height: 23px;
   float: left;
   margin: 6px;
+  border: 1px solid black;
 }
 
 .red { background: red; }
@@ -59,11 +60,14 @@ canvas {
 .green1 { background: #97CD7E; }
 .green2 { background: #C6E2BB; }
 .black { background: black; }
-.black1 { background: #545454; }
-.black2 { background: #B2B2B2; }
+.black1 { background: #333333; }
+.black2 { background: #666666; }
 .yellow { background: yellow; }
 .yellow1 { background: #F7F754; }
 .yellow2 { background: #F7F4B1; }
 .purple { background: #B9509E; }
 .purple1 { background: #D178B1; }
 .purple2 { background: #E3ABCE; }
+.grey { background: #999999; }
+.grey1 { background: #CCCCCC; }
+.white { background: white; }
