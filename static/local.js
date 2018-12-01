@@ -303,7 +303,7 @@ socket.on('ack', function(data){
 	server_ack = data + 1;
 })
 
-var THRESHOLD = 2300;
+var THRESHOLD = 50;
 function sendImage(){
 	if (Date.now() - lastSnapshot > THRESHOLD && (server_ack >= current_id)){
 		console.log('sending data! -----> ')
