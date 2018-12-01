@@ -26,11 +26,10 @@ function startDrawing(event) {
 	// The user began drawing, so save this state to a variable
 	isDrawing = true;
 
-	// set the pen properties
-  pen.lineWidth = 10;
-  pen.lineJoin = pen.lineCap = 'round';
-  pen.shadowBlur = 10;
-  pen.shadowColor = 'rgb(0, 0, 0)';
+  // pen.lineWidth = 10;
+  // pen.lineJoin = pen.lineCap = 'round';
+  // pen.shadowBlur = 10;
+  // pen.shadowColor = 'rgb(0, 0, 0)';
 
 	// Save the current timestamp
 	lastSent = Date.now();
@@ -44,11 +43,21 @@ function startDrawing(event) {
 function drawStuff(event) {
 	// If the user is holding down the mouse button (isDrawing) AND it's been more than 30 milliseconds since we notified the server
 	if (isDrawing && Date.now() - lastSent > 30) {
-		// Draw a line from the last saved coordinates to the newly saved coordinates
-		pen.beginPath();
-		pen.moveTo(prevX, prevY);
-		pen.lineTo(event.clientX, event.clientY);
-		pen.stroke();
+		// - Draw a line from the last saved coordinates to the newly saved coordinates
+		// pen.beginPath();
+		// pen.moveTo(prevX, prevY);
+		// pen.lineTo(event.clientX, event.clientY);
+		// pen.stroke();
+
+		// set the pen properties
+	  var radgrad = pen.createRadialGradient(
+	    event.clientX,event.clientY,10,event.clientX,event.clientY,20);
+
+	  radgrad.addColorStop(0, '#000');
+	  radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+	  radgrad.addColorStop(1, 'rgba(0,0,0,0)');
+	  pen.fillStyle = radgrad;
+		pen.fillRect(event.clientX-20, event.clientY-20, 40, 40);
 
 		// Display the previous and current coordinates in the web browser's console
 		console.log("Draw from " + prevX + ", " + prevY + " to " + event.clientX + ", " + event.clientY);
@@ -74,13 +83,34 @@ function stopDrawing(event) {
 	console.log("Stop: " + event.clientX + ", " + event.clientY);
 }
 
-function redraw(points){
+function draw_gradient(points){
+	// clear the canvas
 	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
-	pen.beginPath();
 
-	var data,i;
-	for(i=0; i<points.length; i++){
-		data = points[i];
+	// draw dots for every point
+	for(var i=0;i<points.length;i++){
+
+		var data = points[i];
+		// set the pen properties
+	  var radgrad = pen.createRadialGradient(
+	    data.toX,data.toY,10,data.toX,data.toY,20);
+
+	  radgrad.addColorStop(0, '#000');
+	  radgrad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+	  radgrad.addColorStop(1, 'rgba(0,0,0,0)');
+	  pen.fillStyle = radgrad;
+		pen.fillRect(data.toX-20, data.toY-20, 40, 40);
+	}
+}
+
+function draw(points){
+	// clear the canvas
+	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
+
+	// draw dots for every point
+	pen.beginPath();
+	for(var i=0; i<points.length; i++){
+		var data = points[i];
 		pen.moveTo(data.fromX, data.fromY);
 		pen.lineTo(data.toX, data.toY);
 	}
@@ -88,7 +118,7 @@ function redraw(points){
 }
 
 socket.on('new data', function(data){
-	console.log(data);
-	redraw(data);
+	console.log("received data!");
+	draw_gradient(data);
 
 })
