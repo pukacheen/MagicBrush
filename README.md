@@ -7,9 +7,20 @@ Draw on the left panel, and see the result on the right! there is about 2 second
 <img src="docs/hi.png">
 
 # Setup w/ Google Cloud
-ssh to your instance (I'd recommend starting your VM with Tensorflow image already installed)
+Setting up a VM is hard if you're doing it for the first time. Google has a sort-of-good documentation [here](https://cloud.google.com/deep-learning-vm/docs/quickstart-marketplace), which gets you a VM with Tensorflow already installed.
 
-install flask
+Install `gcloud` if you haven't already! Once you have a server:
+
+### 1. ssh to your instance
+The app serves the webpage on `localhost:5000`. In order to access it, you need to do port-forwarding, via something like this (copy the SSH that google gives you, but add the "-- -L 5000:localhost:5000" at the end):
+```
+gcloud compute ssh --project carbide-sweep-173716 --zone us-east1-c tensorflow-3-vm -- -L 5000:localhost:5000
+```
+
+### 2. clone + install
+git clone the project
+
+install flask (Note: you *have* to use `pip3`! Otherwise flask will complain)
 ```
 pip3 install -r requirements.txt
 ```
@@ -26,12 +37,10 @@ run the webserver
 FLASK_APP=app.py flask run
 ```
 
-This serves the webpage on `localhost:5000`. In order to access it, you need to do port-forwarding, via something like this (copy the SSH that google gives you, but add the "-- -L 5000:localhost:5000" at the end):
-```
-gcloud compute ssh --project carbide-sweep-173716 --zone us-east1-c tensorflow-3-vm -- -L 5000:localhost:5000
-```
+And after that, you should be able to see the webpage on `localhost:5000`! (since you did the port forwarding step in the beginning)
 
-And after that, you should be able to see the webpage!
+### 3. Hack on the code
+You can change it if you want!
 
 
 # Todo!!
