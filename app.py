@@ -17,7 +17,7 @@ def loadTransformNet():
 # DEVELOPMENT PURPOSES ONLY
 # set to None if you don't want to load the TransformNet
 emperor_penguin = None
-# emperor_penguin = loadTransformNet()
+emperor_penguin = loadTransformNet()
 
 points = []
 

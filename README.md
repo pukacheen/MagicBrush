@@ -6,6 +6,34 @@ Draw on the left panel, and see the result on the right! there is about 2 second
 
 <img src="docs/hi.png">
 
+# Setup w/ Google Cloud
+ssh to your instance (I'd recommend starting your VM with Tensorflow image already installed)
+
+install flask
+```
+pip3 install -r requirements.txt
+```
+
+get the checkpoints from somewhere (google cloud?) and put them in the directory
+```
+cd socketio-paint-demo
+mkdir checkpoints
+gsutil cp gs://transformer-results-bucket/training/fast_style_transfer-1/* checkpoints
+```
+
+run the webserver
+```
+FLASK_APP=app.py flask run
+```
+
+This serves the webpage on `localhost:5000`. In order to access it, you need to do port-forwarding, via something like this (copy the SSH that google gives you, but add the "-- -L 5000:localhost:5000" at the end):
+```
+gcloud compute ssh --project carbide-sweep-173716 --zone us-east1-c tensorflow-3-vm -- -L 5000:localhost:5000
+```
+
+And after that, you should be able to see the webpage!
+
+
 # Todo!!
 
 ## multiple users making style requests 
