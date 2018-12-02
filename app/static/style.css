@@ -50,11 +50,13 @@ canvas {
   position: absolute;
   right: 0px;
   top: 0px;
-  padding-top: 3px;
+  margin-top: 20px;
+  margin-right: 20px;
 }
 
 .thumbnail {
   margin: 3px;
+  padding: 15px;
 }
 
 .selected {
@@ -80,7 +82,7 @@ canvas {
   width: 25px;
   height: 25px;
   float: left;
-  margin: 8px;
+  margin: 4px 8px;
   border: 1px solid black;
 }
 
