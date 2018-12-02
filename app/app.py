@@ -8,16 +8,26 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-def loadTransformNet():
+
+default_style = 'rain_princess'
+available_nets = ['rain_princess', 'wave']
+
+library_loaded = False
+def loadTransformNet(name):
     """Lazy loading of transform Net
     """
-    from tensorstyle import TransformNet
-    return TransformNet()
+    global library_loaded
 
-# DEVELOPMENT PURPOSES ONLY
+    if not library_loaded:
+        from tensorstyle import TransformNet
+        library_loaded = True
+    
+    return TransformNet(name)
+
+#_ DEVELOPMENT PURPOSES ONLY
 # set to None if you don't want to load the TransformNet
 emperor_penguin = None
-emperor_penguin = loadTransformNet()
+emperor_penguin = loadTransformNet(default_style)
 
 points = []
 

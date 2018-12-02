@@ -38,10 +38,10 @@ def encode(pixels):
 
 class TransformNet:
 
-    def __init__(self):
+    def __init__(self, name='wave'):
 
         batch_size = 1
-        checkpoint_dir = 'checkpoints'
+        checkpoint_dir = 'checkpoints/{}'.format(name)
 
         self.img_shape = [512, 512, 3]
         self.batch_shape = [batch_size] + self.img_shape
@@ -66,7 +66,7 @@ class TransformNet:
             else:
                 raise Exception("No checkpoint found...")
         else:
-            saver.restore(sess, checkpoint_dir)
+            raise Exception("No model found!")
 
         # save these so we can use them later
         self.sess = sess
