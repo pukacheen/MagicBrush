@@ -89,18 +89,13 @@
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='brushColor.js') }}"></script>
+    <script src="{{ url_for('static', filename='colorPicker.js') }}"></script>
     <script src="{{ url_for('static', filename='brushSize.js') }}"></script>
-    <script src="{{ url_for('static', filename='color_picker.js') }}"></script>
+    <script src="{{ url_for('static', filename='sizeSlider.js') }}"></script>
     <script>
       // Default color is black.
       window.colors = "#000000";	
     </script>
     <script src="{{ url_for('static', filename='local.js') }}"></script>
-    <script>
-	var slider = document.getElementById("myRange");
-	slider.oninput = function() {
-		changeBrushSize(this.value);
-	}
-    </script>
   </body>
 </html>
