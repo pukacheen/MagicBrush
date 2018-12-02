@@ -1,94 +1,94 @@
 //Color palette
-window.colors = "";
+window.brush_color = "";
 function changeColors(palette) {
 	if (palette.className && palette.className.includes("palette")) {
 		switch(palette.id) {
 			case "red":
-				colors = "#FF0000";
+				brush_color = "#FF0000";
 				break;
 			case "red1":
-				colors = "#F16161";
+				brush_color = "#F16161";
 				break;
 			case "red2":
-				colors = "#F69FA0";
+				brush_color = "#F69FA0";
 				break;
 			case "orange":
-				colors = "#FFA500";
+				brush_color = "#FFA500";
 				break;
 			case "orange1":
-				colors = "#F99F62";
+				brush_color = "#F99F62";
 				break;
 			case "orange2":
-				colors = "#FBB57B";
+				brush_color = "#FBB57B";
 				break;
 			case "blue":
-				colors = "#09C2DB";
+				brush_color = "#09C2DB";
 			break;
 			case "blue1":
-				colors = "#8BD3DC";
+				brush_color = "#8BD3DC";
 				break;
 			case "blue2":
-				colors = "#B9E3E8";
+				brush_color = "#B9E3E8";
 				break;
 			case "indigo":
-				colors = "#0E38AD";
+				brush_color = "#0E38AD";
 				break;
 			case "indigo1":
-				colors = "#546AB2";
+				brush_color = "#546AB2";
 				break;
 			case "indigo2":
-				colors = "#9C96C9";
+				brush_color = "#9C96C9";
 				break;
 			case "green":
-				colors = "#008000";
+				brush_color = "#008000";
 				break;
 			case "green1":
-				colors = "#97CD7E";
+				brush_color = "#97CD7E";
 				break;
 			case "green2":
-				colors = "#C6E2BB";
+				brush_color = "#C6E2BB";
 				break;
 			case "black":
-				colors = "#000000";
+				brush_color = "#000000";
 				break;
 			case "black1":
-				colors = "#333333";
+				brush_color = "#333333";
 				break;
 			case "black2":
-				colors = "#666666";
+				brush_color = "#666666";
 				break;
 			case "yellow":
-				colors = "#FFFF00";
+				brush_color = "#FFFF00";
 				break;
 			case "yellow1":
-				colors = "#F7F754";
+				brush_color = "#F7F754";
 				break;
 			case "yellow2":
-				colors ="#F7F4B1";
+				brush_color ="#F7F4B1";
 				break;
 			case "purple":
-				colors = "#B9509E";
+				brush_color = "#B9509E";
 				break;
 			case "purple1":
-				colors = "#D178B1";
+				brush_color = "#D178B1";
 				break;
 			case "purple2":
-				colors = "#E3ABCE";
+				brush_color = "#E3ABCE";
 				break;
 			case "grey":
-				colors = "#999999";
+				brush_color = "#999999";
 			break;
 			case "grey1":
-				colors = "#CCCCCC";
+				brush_color = "#CCCCCC";
 				break;
 			case "white":
-				colors = "#FFFFFF";
+				brush_color = "#FFFFFF";
 				break;
 		}
 	} else {
-		colors = "#" + palette;	
+		brush_color = "#" + palette;	
 	}
-	document.getElementById("current_brush").style.backgroundColor = colors;
+	document.getElementById("current_brush").style.backgroundColor = brush_color;
 };
 
 changeColors({id: "red"});

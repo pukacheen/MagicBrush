@@ -5,3 +5,4 @@ __pycache__
 *.flv
 
 checkpoints
+.DS_Store

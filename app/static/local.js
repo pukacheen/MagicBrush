@@ -101,36 +101,49 @@ function hexToRGB(hex, alpha) {
 }
 
 
-function paint(x,y){
+function paint(x,y, brush){
 	// draw gradient at x,y
-	console.log('transparency:' + brush_transparency);
+	console.log('transparency:' + brush.transparency);
 	
-	var width = brush_size * (1 + 2*(1-brush_transparency));
+	var width = brush.size * (1 + 2*(1-brush.transparency));
 	if (width == 0) {
 		width = 10;
 	}
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
 	
-	radgrad.addColorStop(0, hexToRGB(colors, brush_transparency));
-	radgrad.addColorStop(0.33, hexToRGB(colors, brush_transparency * 0.5));
-	radgrad.addColorStop(0.66, hexToRGB(colors, brush_transparency * 0.2));
-	radgrad.addColorStop(1, hexToRGB(colors, 0));
+	radgrad.addColorStop(0, hexToRGB(brush.color, brush.transparency));
+	radgrad.addColorStop(0.33, hexToRGB(brush.color, brush.transparency * 0.5));
+	radgrad.addColorStop(0.66, hexToRGB(brush.color, brush.transparency * 0.2));
+	radgrad.addColorStop(1, hexToRGB(brush.color, 0));
 
 	pen.fillStyle = radgrad;
 	pen.fillRect(x-width, y-width, 2* width, 2*width);
 }
 
-function marchPaint(p1, p2){
-  var dist = distanceBetween(p1, p2);
-  var angle = angleBetween(p1, p2);
+function getCurrentBrush(){
+	var brush = {
+		size: brush_size,
+		transparency: brush_transparency,
+		color: brush_color
+	};
+
+	return brush;
+}
+
+function marchPaint(p1, p2, brush=null){
+	var dist = distanceBetween(p1, p2);
+	var angle = angleBetween(p1, p2);
+	if (brush == null){
+		brush = getCurrentBrush();
+	}
 
 	// step forward by 5 pixels when adding points
 	var x,y;
 	for(var t=0; t<dist; t+=5){
 	    x = p1.x + (Math.sin(angle) * t);
 	    y = p1.y + (Math.cos(angle) * t);
-			paint(x,y);
+			paint(x,y, brush);
 	}
 }
 
@@ -158,7 +171,7 @@ function drawStuff(event) {
 		lastSent = Date.now();
 
 		// Send message named "new line" to the server with an object containing previous and current coordinates
-		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: newX, toY: newY, brush_size: brush_size, color: colors, uid: uid});
+		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: newX, toY: newY, brush_transparency: brush_transparency, brush_size: brush_size, color: brush_color, uid: uid});
 
 		// Replace previous coordinates with the current coordinates (we need this to draw a continuous line)
 		prevX = newX;
@@ -190,6 +203,10 @@ function redrawPoints(points){
 			}, {
 				x: point.toX,
 				y: point.toY
+			}, {
+				size: point.brush_size,
+				transparency: point.brush_transparency,
+				color: point.color
 			});
 		}
 	};
@@ -220,6 +237,10 @@ socket.on('draw', function(data){
 		}, {
 			x: point.toX,
 			y: point.toY
+		}, {
+			size: point.brush_size,
+			transparency: point.brush_transparency,
+			color: point.color
 		});
 	}
 })
