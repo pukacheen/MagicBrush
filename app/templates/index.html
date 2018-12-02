@@ -69,6 +69,11 @@
         <div class="""slidecontainer">
           <input type="range" min="10" max="50" value="30" class="slider" id="myRange">
         </div>
+
+        <center><p style="margin-block-end: 0">Transparency Slider</p></center>
+        <div class="""transparency_container">
+          <input type="range" min="0.05" max="0.8" value="0.2" class="slider" id="myTransparency">
+        </div>
       </div>
 
       <div class="canvas_container">
@@ -93,6 +98,7 @@
     <script src="{{ url_for('static', filename='colorPicker.js') }}"></script>
     <script src="{{ url_for('static', filename='brushSize.js') }}"></script>
     <script src="{{ url_for('static', filename='sizeSlider.js') }}"></script>
+    <script src="{{ url_for('static', filename='transparencySlider.js') }}"></script>
     <script>
       // Default color is black.
       window.colors = "#000000";	

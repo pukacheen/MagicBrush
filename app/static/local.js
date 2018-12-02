@@ -97,7 +97,7 @@ function hexToRGB(hex, alpha) {
 
 function paint(x,y){
 	// draw gradient at x,y
-	var base_transparency = 0.2;
+	var brush_transparency = 0.2;
 	var width = brush_size * 1.5;
 	if (width == 0) {
 		width = 10;
@@ -105,9 +105,9 @@ function paint(x,y){
 	var radgrad = pen.createRadialGradient(
 		x,y,width/2,x,y,width);
 	
-	radgrad.addColorStop(0, hexToRGB(colors, base_transparency));
-	radgrad.addColorStop(0.33, hexToRGB(colors, base_transparency * 0.5));
-	radgrad.addColorStop(0.66, hexToRGB(colors, base_transparency * 0.2));
+	radgrad.addColorStop(0, hexToRGB(colors, brush_transparency));
+	radgrad.addColorStop(0.33, hexToRGB(colors, brush_transparency * 0.5));
+	radgrad.addColorStop(0.66, hexToRGB(colors, brush_transparency * 0.2));
 	radgrad.addColorStop(1, hexToRGB(colors, 0));
 
 	pen.fillStyle = radgrad;
