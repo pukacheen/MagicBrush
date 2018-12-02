@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for
 from flask_socketio import SocketIO, send, emit
+from tensorstyle import TransformNet
 
 import os
 
@@ -8,27 +9,25 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-
-default_style = 'rain_princess'
-available_nets = ['rain_princess', 'wave']
-
-library_loaded = False
-def loadTransformNet(name):
-    """Lazy loading of transform Net
-    """
-    global library_loaded
-
-    if not library_loaded:
-        from tensorstyle import TransformNet
-        library_loaded = True
-    
-    return TransformNet(name)
-
 #_ DEVELOPMENT PURPOSES ONLY
-# set to None if you don't want to load the TransformNet
-emperor_penguin = None
-emperor_penguin = loadTransformNet(default_style)
+# set to None if you don't want to load the TransformNet (ie, for fast testing of the front end)
+emperor_penguin = 1
 
+availableStyles = ['rain_princess', 'wave']
+
+currentStyle = 'rain_princess'
+stylizers = {}
+
+def loadTransformNet(name):
+    print("Loading {}...".format(name))
+    stylizers[name] = TransformNet(name)
+
+def populateStyles():
+    if emperor_penguin is not None:
+        for t in availableStyles:
+            loadTransformNet(t)
+
+populateStyles()
 points = []
 
 @app.route('/')
@@ -72,15 +71,29 @@ def update_drawing(data):
 def receive_image(package):
     i, data = package['image_id'], package['image']
     emit('ack', i)
-    print('Received data {}!'.format(i))
+
+    if currentStyle not in stylizers or stylizers[currentStyle] is None:
+        loadTransformNet(currentStyle)
 
     if emperor_penguin is not None:
         base64_picture = data.split(',')[1]
-        original, result = emperor_penguin.decode(base64_picture)
+        original, result = stylizers[currentStyle].decode(base64_picture)
         print('Sending...', 'data:image/png;base64,' + result[:10])
         emit('result', 'data:image/png;base64,' + result)
         emit('original', 'data:image/png;base64,' + original)
 
+@socketio.on('change_style')
+def update_style(data):
+    global currentStyle
+    
+    styleName = data['style_name']
+
+    if styleName in availableStyles:
+        print('Changing the style to {}'.format(styleName))
+        currentStyle = styleName
+    else:
+        print("Don't hack the front end to send me bogus styles")
+        
 
 if __name__ == '__main__':
     print("all right, i ran")

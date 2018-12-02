@@ -324,3 +324,16 @@ function sendImage(){
 
 // check last sent image
 setInterval(sendImage, 100);
+
+
+/*
+*
+*		Sending the change in styles
+*
+*/
+function changeStyle(style){
+	socket.emit('change_style', {
+		'style_name': style.id
+	});
+	console.log("Changing the style to " + style.id);
+}

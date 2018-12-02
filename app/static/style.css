@@ -14,8 +14,13 @@ canvas {
 }
 
 .container {
-	display: flex;
-	flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.container > * {
+  margin: 5px;
 }
 
 #mycanvas {
@@ -24,6 +29,29 @@ canvas {
 
 #mycanvas2 {
 	border: 2px solid green;
+}
+
+.canvas_container {
+  height: 512px;
+  width: 512px;
+  position: relative;
+}
+
+.thumbnails {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding-top: 3px;
+}
+.thumbnail {
+  margin: 3px;
+}
+.selected {
+  border: 3px solid greenyellow;
+}
+.thumbnail img {
+  height: 100px;
+  width: 100px;
 }
 
 #colorpanel {
