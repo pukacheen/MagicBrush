@@ -18,8 +18,8 @@ function changeBrushSize(brush_size) {
 		window.brush_size = brush_size / 2;
 	}
 	current_brush = document.getElementById("current_brush");
-	current_brush.style.width = brush_size + "px";
-	current_brush.style.height = brush_size + "px";
+	current_brush.style.width = window.brush_size*2 + "px";
+	current_brush.style.height = window.brush_size*2 + "px";
 };
 
 changeBrushSize(30);
