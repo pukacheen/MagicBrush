@@ -7,11 +7,6 @@
   </head>
 
   <body>
-    <div class="container">
-      <button id="clear_button">Clear</button>
-      <button id="toggle_button">Toggle Result</button>
-      <p id="status"></p>
-    </div>
 
     <div class="container">
       <div id="inputpanel">
@@ -66,24 +61,38 @@
         </div>
 
         <center><p style="margin-block-end: 0">Size Slider</p></center>
-        <div class="""slidecontainer">
+        <div class="slidecontainer">
           <input type="range" min="10" max="50" value="30" class="slider" id="myRange">
         </div>
       </div>
 
-      <div class="canvas_container">
-        <canvas id="mycanvas" width="512" height="512"></canvas>
-      </div>
+      <div>
+        <div class="banner">
+          <h1>MagicBrush</h1>
+        </div>
+	
+	<div class="container">
+          <div class="canvas_container">
+            <canvas id="mycanvas" width="512" height="512"></canvas>
+          </div>
 
-      <div class="canvas_container">
-        <canvas id="mycanvas2" width="512" height="512"></canvas>
-        <div class="thumbnails container">
-          <div class="thumbnail" id="wave" onclick="changeStyle(this)">
-            <img src="{{ url_for('static', filename='thumbnails/wave.jpg') }}" />
+          <div class="canvas_container">
+            <canvas id="mycanvas2" width="512" height="512"></canvas>
+            <div class="thumbnails container">
+              <div class="thumbnail" id="wave" onclick="changeStyle(this)">
+                <img src="{{ url_for('static', filename='thumbnails/wave.jpg') }}" />
+              </div>
+              <div class="thumbnail" id="rain_princess" onclick="changeStyle(this)">
+                <img src="{{ url_for('static', filename='thumbnails/rain_princess.jpg') }}" />
+              </div>
+            </div>
           </div>
-          <div class="thumbnail" id="rain_princess" onclick="changeStyle(this)">
-            <img src="{{ url_for('static', filename='thumbnails/rain_princess.jpg') }}" />
-          </div>
+	</div>
+
+        <div class="container">
+          <button id="clear_button">Clear</button>
+          <button id="toggle_button">Toggle Result</button>
+          <p id="status"></p>
         </div>
       </div>
     </div>
