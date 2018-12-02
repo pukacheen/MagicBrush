@@ -52,7 +52,7 @@ class TransformNet:
         # logs the placement decisions.
         self.graph = tf.Graph()
         self.sess = tf.Session(graph=self.graph,
-            config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
+            config=tf.ConfigProto(allow_soft_placement=True))
 
         # create the network
         with self.graph.as_default():
