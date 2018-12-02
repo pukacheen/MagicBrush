@@ -22,9 +22,15 @@ function drawBase(callback=null){
 drawBase();
 
 // Listen for mouse events on the canvas element
-canvas.addEventListener('mousedown', sendCoordinates(startDrawing));
-canvas.addEventListener('mousemove', sendCoordinates(drawStuff));
-canvas.addEventListener('mouseup', sendCoordinates(stopDrawing));
+canvas.addEventListener('mousedown', sendCoordinates(canvas, startDrawing));
+canvas.addEventListener('mousemove', sendCoordinates(canvas, drawStuff));
+canvas.addEventListener('mouseup', sendCoordinates(canvas, stopDrawing));
+
+// Listen for mouse events on the canvas element
+var canvas2 = document.getElementById('mycanvas2');
+canvas2.addEventListener('mousedown', sendCoordinates(canvas2, startDrawing));
+canvas2.addEventListener('mousemove', sendCoordinates(canvas2, drawStuff));
+canvas2.addEventListener('mouseup', sendCoordinates(canvas2, stopDrawing));
 
 // Initializing variables for tracking user input
 var isDrawing = false;
@@ -36,7 +42,7 @@ var prevY;
 var lastSnapshot = Date.now();
 
 // wrap the position in this
-function sendCoordinates(callback) {
+function sendCoordinates(canvas, callback) {
     var f = function(event){
 			var rect = canvas.getBoundingClientRect();
 	    var adjustedPosition = {
