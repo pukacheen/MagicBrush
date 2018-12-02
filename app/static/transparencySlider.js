@@ -10,6 +10,6 @@ window.changeBrushTransparency = changeBrushTransparency;
 // Slider
 slider = document.getElementById("myTransparency");
 slider.oninput = function() {
-	changeTransparency(this.value);
+	changeBrushTransparency(this.value);
 }
 

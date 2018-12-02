@@ -97,8 +97,9 @@ function hexToRGB(hex, alpha) {
 
 function paint(x,y){
 	// draw gradient at x,y
-	var brush_transparency = 0.2;
-	var width = brush_size * 1.5;
+	console.log('transparency:' + brush_transparency);
+	
+	var width = brush_size * (1 + 2*(1-brush_transparency));
 	if (width == 0) {
 		width = 10;
 	}
