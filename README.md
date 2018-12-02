@@ -52,15 +52,15 @@ Once you SSH'ed into your GCP VM:
 ### 2. Install all requirements
 Note: You *have* to use `pip3`! Otherwise flask will complain.
 ```
-pip3 install -r MagicBrush/requirements.txt
+pip3 install -r MagicBrush/app/requirements.txt
 ```
 
 ### 3. Get our training checkpoints
 Get our training checkpoints from Google Cloud and put them in the directory.
 ```
-cd MagicBrush
+cd MagicBrush/app
 mkdir checkpoints
-gsutil cp gs://transformer-results-bucket/training/fast_style_transfer-1/* checkpoints
+gsutil cp -r gs://transformer-results-bucket/MagicBrush/* checkpoints
 ```
 ### 4. Run the webserver
 ```
