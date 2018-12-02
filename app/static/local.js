@@ -7,10 +7,13 @@ var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
 
-function drawBase(){
+function drawBase(callback=null){
 	var baseImage = new Image;
 	baseImage.onload = function(){
 		pen.drawImage(baseImage, 0, 0);
+		if (callback !== null){
+			callback();
+		}
 	}
 	baseImage.src = './pikachu.jpg';
 }
@@ -168,21 +171,27 @@ function stopDrawing(event) {
 
 
 function redrawPoints(points){
+
+	// this function will be called after the background image is loaded
+	var drawRealPoints = function (){
+		for(var i=0;i<points.length;i++){
+
+			// draw dots for every point
+			var point = points[i];
+			marchPaint({
+				x: point.fromX,
+				y: point.fromY
+			}, {
+				x: point.toX,
+				y: point.toY
+			});
+		}
+	};
+
 	// clear the canvas
 	pen.clearRect(0, 0, pen.canvas.width, pen.canvas.height);
-	drawBase();
-
-	// draw dots for every point
-	for(var i=0;i<points.length;i++){
-		var point = points[i];
-		marchPaint({
-			x: point.fromX,
-			y: point.fromY
-		}, {
-			x: point.toX,
-			y: point.toY
-		});
-	}
+	drawBase(callback=drawRealPoints);
+	
 }
 
 socket.on('connect', function(){
@@ -235,7 +244,6 @@ imgOriginal.onload = function(){
 }
 
 function redrawResult(){
-	console.log('redrawing...')
 	if(showResult){
 		ctx.drawImage(imgResult,0,0);
 	}else{
@@ -244,15 +252,11 @@ function redrawResult(){
 }
 
 socket.on('result', function(data){
-	console.log('Styled data!');
-	// console.log(data);
 	imgResult.src = data;
 	redrawResult();
 })
 
 socket.on('original', function(data){
-	console.log('Original data!');
-	// console.log(data);
 	imgOriginal.src = data;
 	redrawResult();
 
