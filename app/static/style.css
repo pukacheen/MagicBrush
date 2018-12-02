@@ -131,7 +131,8 @@ canvas {
 	height: 20px;
 	padding: 10px;
 	border: 1px solid black;
-	font-family: "Courier New"
+	font-family: "Courier New";
+	margin-top: 10px;
 }
 
 .brush {
