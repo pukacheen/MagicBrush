@@ -1,5 +1,9 @@
 # MagicBrush
 
+🎬Demo Video 🎬: https://www.youtube.com/watch?v=splMEzd4ClU&feature=youtu.be
+
+🔥Live Demo 🔥: http://35.247.115.136:5000
+
 Want to paint like a real artist? MagicBrush can help you! You can interactively draw in the web browser and have your painting transformed into the style of your favorite masterpiece in real time!
 
 Neural Style Transfer is a (3 years) old magic which has become quite popular, but we want to make it better: interactive and real-time. The original algorithm from L. A. Gatys et. al. (2015) only allows you to transfer one image to one style at a time, and takes up to an hour to obtain a single frame of output even on a powerful machine. We use a faster neural network inspired by J. Johnson. et al. (2016) to make this application interactive and real-time, allowing users to actually engage with the transformation in the browser.
@@ -73,15 +77,13 @@ You should be able to see MagicBrush at `localhost:5000`!
 # Todo
 
 ## Multiple users making style requests
-Right now, the webpage keeps track of the server ack (the # of images that have been processed so far) as a way to not spam the server too much. However, if multiple users connect and send "image" data with *different image_id's* (and this does happen, because the `image_id`'s are not tied to each other in any way), then the whole synchronization thing can be messed up!!
-- find a good way to solve this
+- done!
 
 ## Making the network faster
-This would mean more real-time feels. <3 How do we do this???? Run on a GPU
-Right now, it's 1.7s on a CPU.
+- done!
 
 ## Making the network better
-It doesn't look *great*, as to be expected. We took an image style thing, and *did absolutely no customization* to make it process sketches. A more sketch-aware solution would do wonders on this front!!
+- done!
 
 ## For our own record
 It's 5:15AM, Sunday 12/02/2018. Our app is finally on the internet! http://35.247.115.136:5000/
