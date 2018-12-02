@@ -1,6 +1,7 @@
 # MagicBrush
 
 🎬Demo Video 🎬: https://www.youtube.com/watch?v=splMEzd4ClU&feature=youtu.be
+
 🔥Live Demo 🔥: http://35.247.115.136:5000
 
 Want to paint like a real artist? MagicBrush can help you! You can interactively draw in the web browser and have your painting transformed into the style of your favorite masterpiece in real time!
