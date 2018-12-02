@@ -1,8 +1,7 @@
 from flask import Flask, render_template, url_for
 from flask_socketio import SocketIO, send, emit
 from tensorstyle import TransformNet
-
-import os
+import time, os
 
 app = Flask(__name__, static_url_path='')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -61,6 +60,19 @@ def clear():
     points = []
     emit('new data', points, broadcast=True)
 
+@socketio.on('undo')
+def undo(data):
+    global points
+
+    uid = data['uid']
+
+    start = time.time()
+    last_points_by_user = [p for p in reversed(points) if p['uid'] == uid][:10]
+    points = [p for p in points if p not in last_points_by_user]
+    end = time.time() - start
+    print('<==== undoing {} took {} seconds'.format(uid, end))
+    emit('new data', points, broadcast=True)
+    
 @socketio.on('draw')
 def update_drawing(data):
     print("We have", len(points), "points on the canvas")

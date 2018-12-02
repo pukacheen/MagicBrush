@@ -312,6 +312,10 @@ toggle.onclick = function(event){
 	}
 }
 
+var undo = document.getElementById('undo_button');
+undo.onclick = function(event){
+	socket.emit('undo', {uid: uid});
+}
 
 var clear = document.getElementById('clear_button');
 clear.onclick = function(event){
