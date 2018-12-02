@@ -88,6 +88,7 @@ function changeColors(palette) {
 	} else {
 		colors = "#" + palette;	
 	}
+	document.getElementById("current_brush").style.backgroundColor = colors;
 };
 
 changeColors({id: "red"});

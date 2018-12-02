@@ -17,6 +17,9 @@ function changeBrushSize(brush_size) {
 	} else {
 		window.brush_size = brush_size / 2;
 	}
+	current_brush = document.getElementById("current_brush");
+	current_brush.style.width = brush_size + "px";
+	current_brush.style.height = brush_size + "px";
 };
 
 changeBrushSize(30);

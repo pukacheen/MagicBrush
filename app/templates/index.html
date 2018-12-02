@@ -81,12 +81,8 @@
     <script src="{{ url_for('static', filename='local.js') }}"></script>
     <script>
 	var slider = document.getElementById("myRange");
-	var current_brush = document.getElementById("current_brush");
 	slider.oninput = function() {
-		console.log(small);	
 		changeBrushSize(this.value);
-		current_brush.style.height = this.value + "px";
-		current_brush.style.width = this.value + "px";
 	}
     </script>
   </body>
