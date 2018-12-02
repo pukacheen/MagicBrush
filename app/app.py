@@ -13,7 +13,7 @@ socketio = SocketIO(app)
 # set to None if you don't want to load the TransformNet (ie, for fast testing of the front end)
 emperor_penguin = 1
 
-availableStyles = ['rain_princess', 'wave']
+availableStyles = ['rain_princess', 'wave', 'lion', 'miro', 'spectacle', 'vangogh']
 
 currentStyle = 'rain_princess'
 stylizers = {}
