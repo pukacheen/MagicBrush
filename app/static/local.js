@@ -7,6 +7,8 @@ var canvas = document.getElementById('mycanvas');
 // Create a variable to access the two-dimensional canvas drawing functions
 var pen = canvas.getContext('2d');
 
+var uid = Math.random();
+
 function drawBase(callback=null){
 	var baseImage = new Image;
 	baseImage.onload = function(){
@@ -54,11 +56,6 @@ function startDrawing(event) {
 
 	// The user began drawing, so save this state to a variable
 	isDrawing = true;
-
-  // pen.lineWidth = 10;
-  // pen.lineJoin = pen.lineCap = 'round';
-  // pen.shadowBlur = 10;
-  // pen.shadowColor = 'rgb(0, 0, 0)';
 
 	// Save the current timestamp
 	lastSent = Date.now();
@@ -137,7 +134,7 @@ function drawStuff(event) {
 		var newX = event.x;
 		var newY = event.y;
 
-	  marchPaint({
+	  	marchPaint({
 			x: prevX,
 			y: prevY
 		},{
@@ -152,7 +149,7 @@ function drawStuff(event) {
 		lastSent = Date.now();
 
 		// Send message named "new line" to the server with an object containing previous and current coordinates
-		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: newX, toY: newY});
+		socket.emit('draw', {fromX: prevX, fromY: prevY, toX: newX, toY: newY, brush_size: brush_size, color: colors, uid: uid});
 
 		// Replace previous coordinates with the current coordinates (we need this to draw a continuous line)
 		prevX = newX;
@@ -200,20 +197,22 @@ socket.on('connect', function(){
 
 socket.on('new data', function(data){
 	console.log("received data from other clients!");
+	console.log(data);
 	redrawPoints(data);
 });
 
 socket.on('draw', function(data){
-	// console.log("drawing");
-
 	var point = data;
-	marchPaint({
-		x: point.fromX,
-		y: point.fromY
-	}, {
-		x: point.toX,
-		y: point.toY
-	});
+	// incremental updates detect if it's the same user
+	if (point.uid != uid){
+		marchPaint({
+			x: point.fromX,
+			y: point.fromY
+		}, {
+			x: point.toX,
+			y: point.toY
+		});
+	}
 })
 
 
@@ -307,7 +306,10 @@ var p = document.getElementById('status');
 var current_id = 0;
 var server_ack = 0;
 socket.on('ack', function(data){
-	server_ack = data + 1;
+	// server ack is now user-specific
+	if(data.uid == uid){
+		server_ack = data['i'] + 1;
+	}
 })
 
 var THRESHOLD = 50;
@@ -317,7 +319,8 @@ function sendImage(){
 		var data = canvas.toDataURL('image/png');
 		socket.emit('image', {
 			'image': data,
-			'image_id': current_id
+			'image_id': current_id,
+			'uid': uid
 		});
 
 		lastSnapshot = Date.now();

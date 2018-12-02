@@ -19,8 +19,9 @@ currentStyle = 'rain_princess'
 stylizers = {}
 
 def loadTransformNet(name):
-    print("Loading {}...".format(name))
-    stylizers[name] = TransformNet(name)
+    if emperor_penguin is not None:
+        print("Loading {}...".format(name))
+        stylizers[name] = TransformNet(name)
 
 def populateStyles():
     if emperor_penguin is not None:
@@ -69,8 +70,11 @@ def update_drawing(data):
 
 @socketio.on('image')
 def receive_image(package):
-    i, data = package['image_id'], package['image']
-    emit('ack', i)
+    i, data, uid = package['image_id'], package['image'], package['uid']
+    emit('ack', {
+        'i': i,
+        'uid': uid
+    })
 
     if currentStyle not in stylizers or stylizers[currentStyle] is None:
         loadTransformNet(currentStyle)
