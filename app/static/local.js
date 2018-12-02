@@ -346,6 +346,14 @@ socket.on('ack', function(data){
 	}
 })
 
+var comms = "";
+socket.on('trivia', function(msg){
+	console.log('Received comms');
+	console.log(msg);
+	comms = msg;
+	p.innerHTML = "Latest News: " + comms;
+})
+
 var THRESHOLD = 50;
 function sendImage(){
 	if (Date.now() - lastSnapshot > THRESHOLD && (server_ack >= current_id)){
@@ -359,7 +367,7 @@ function sendImage(){
 
 		lastSnapshot = Date.now();
 		current_id += 1;
-		p.innerHTML = "Sent:" + current_id + ", Processed:" + server_ack;
+		console.log("Sent:" + current_id + ", Processed:" + server_ack);
 	}
 }
 

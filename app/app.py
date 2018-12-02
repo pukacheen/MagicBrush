@@ -72,10 +72,17 @@ def undo(data):
     end = time.time() - start
     print('<==== undoing {} took {} seconds'.format(uid, end))
     emit('new data', points, broadcast=True)
-    
+
+known_users = []
 @socketio.on('draw')
 def update_drawing(data):
-    print("We have", len(points), "points on the canvas")
+    if data['uid'] not in known_users:
+        known_users.append(data['uid'])
+
+    user = known_users.index(data['uid'])
+    msg = "user {} drew on the canvas [{} total points]".format(user, len(points))
+    print(msg)
+    emit('trivia', msg, broadcast=True)
 
     points.append(data)
     emit('draw', data, broadcast=True)
@@ -94,7 +101,7 @@ def receive_image(package):
     if emperor_penguin is not None:
         base64_picture = data.split(',')[1]
         original, result = stylizers[currentStyle].decode(base64_picture)
-        print('Sending...', 'data:image/png;base64,' + result[:10])
+        # print('Sending...', 'data:image/png;base64,' + result[:10])
         emit('result', 'data:image/png;base64,' + result)
         emit('original', 'data:image/png;base64,' + original)
 

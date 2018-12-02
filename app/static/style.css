@@ -19,10 +19,6 @@ button {
 	width: 100%;
 }
 
-#status {
-	display: none;
-}
-
 canvas {
 	margin: 0;
 	padding: 0;

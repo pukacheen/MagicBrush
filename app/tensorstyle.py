@@ -105,7 +105,7 @@ class TransformNet:
         elapsed = time() - start
         self.latest_time = elapsed
 
-        print('Stylized picture took {} seconds:'.format(elapsed), result.shape)
+        # print('Stylized picture took {} seconds:'.format(elapsed), result.shape)
         
         return encode(nparr), encode(result)
 
