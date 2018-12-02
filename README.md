@@ -1,9 +1,5 @@
 # MagicBrush
 
-A sample app for Learn Teach Code that lets users paint on a collaborative canvas in real time over a WebSocket connection. Built with NodeJS, Express and SocketIO.
-
-Draw on the left panel, and see the result on the right! there is about 2 seconds of latency if you're doing it on a computer with no CPU. Which is... not bad!
-
 <img src="docs/hi3.png">
 
 # Set up a Virtual Machine on Google Cloud Platform
