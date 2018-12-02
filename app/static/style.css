@@ -8,15 +8,19 @@ body {
 	padding: 0;
 	background-color: rosybrown;
 	background-image: url(wood_texture.jpg);
-	background-size: cover;
+	background-size: auto 100%;
 	background-position: center center;
 }
 
 button {
 	display: block;
 	background-color: black;
-	font-family: 'Courier New';
 	border: 1px solid grey;
+	width: 100%;
+}
+
+#status {
+	display: none;
 }
 
 canvas {
