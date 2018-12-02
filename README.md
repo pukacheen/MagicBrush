@@ -1,9 +1,5 @@
 # MagicBrush
 
-A sample app for Learn Teach Code that lets users paint on a collaborative canvas in real time over a WebSocket connection. Built with NodeJS, Express and SocketIO.
-
-Draw on the left panel, and see the result on the right! there is about 2 seconds of latency if you're doing it on a computer with no CPU. Which is... not bad!
-
 <img src="docs/hi3.png">
 
 # Set up a Virtual Machine on Google Cloud Platform
@@ -82,3 +78,11 @@ Right now, it's 1.7s on a CPU.
 
 ## Making the network better
 It doesn't look *great*, as to be expected. We took an image style thing, and *did absolutely no customization* to make it process sketches. A more sketch-aware solution would do wonders on this front!!
+
+## For our own record
+It's 5:15AM, Sunday 12/02/2018. Our app is finally on the internet! http://35.247.115.136:5000/
+The tricks are:
+- Have a static external IP adress associated with the VM.
+- Add firewal rules to allow ingress traffic on port 80, 443, and 5000.
+- Make sure there's a default route whose next hop is "Default internet gateway" and allows destination IP ranges 0.0.0.0/0.
+- Run "FLASK_APP=app.py flask run --host=0.0.0.0" (note the host flag)
