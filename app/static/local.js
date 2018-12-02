@@ -342,6 +342,11 @@ setInterval(sendImage, 100);
 *
 */
 function changeStyle(style){
+	active_elems = document.getElementsByClassName("active")
+	for (var i = 0; i < active_elems.length; i++) {
+		active_elems[i].classList.remove("active")
+	}
+	style.classList.add("active")
 	socket.emit('change_style', {
 		'style_name': style.id
 	});

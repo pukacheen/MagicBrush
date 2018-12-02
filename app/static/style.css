@@ -55,12 +55,13 @@ canvas {
 }
 
 .thumbnail {
-  margin: 3px;
-  padding: 15px;
+  margin: 18px;
+  width: 100px;
+  height: 100px;
 }
 
-.selected {
-  border: 3px solid greenyellow;
+.active {
+  border: 2px solid white;
 }
 
 .thumbnail img {
