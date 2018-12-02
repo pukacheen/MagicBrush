@@ -6,7 +6,6 @@
 body {
 	margin: 0;
 	padding: 0;
-	/* overflow: hidden; /* Prevent scrolling on the page */ */
 	background-color: rosybrown;
 	background-image: url(wood_texture.jpg);
 	background-size: cover;
@@ -52,6 +51,15 @@ canvas {
   top: 0px;
   margin-top: 20px;
   margin-right: 20px;
+  max-width: 600px;
+}
+
+
+.scroll_container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: scroll;
 }
 
 .thumbnail {
