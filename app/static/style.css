@@ -1,7 +1,16 @@
+* {
+	font-size: 100%;
+	font-family: Palatino Linotype;
+	color: white;
+}
 body {
 	margin: 0;
 	padding: 0;
 	/* overflow: hidden; /* Prevent scrolling on the page */ */
+	background-color: rosybrown;
+	background-image: url(wood_texture.jpg);
+	background-size: cover;
+	background-position: center center;
 }
 
 button {
@@ -23,12 +32,8 @@ canvas {
   margin: 5px;
 }
 
-#mycanvas {
-	border: 2px solid blue;
-}
-
-#mycanvas2 {
-	border: 2px solid green;
+#mycanvas, #mycanvas2 {
+  border: 1px solid black;
 }
 
 .canvas_container {
@@ -43,34 +48,35 @@ canvas {
   top: 0px;
   padding-top: 3px;
 }
+
 .thumbnail {
   margin: 3px;
 }
+
 .selected {
   border: 3px solid greenyellow;
 }
+
 .thumbnail img {
   height: 100px;
   width: 100px;
 }
 
-#colorpanel {
-  width: 130px;
+#inputpanel {
+  width: 150px;
   height: 640px;
   float: left;
-  margin-right: 18px;
-  border: 1px solid black;
 }
 
 #contain {
-  padding-left: 13px;
+  padding-left: 10px;
 }
 
 .palette {
-  width: 23px;
-  height: 23px;
+  width: 25px;
+  height: 25px;
   float: left;
-  margin: 6px;
+  margin: 8px;
   border: 1px solid black;
 }
 
@@ -102,10 +108,19 @@ canvas {
 .grey1 { background: #CCCCCC; }
 .white { background: white; }
 
+.jscolor {
+	width: 57px;
+	height: 20px;
+	padding: 10px;
+	border: 1px solid black;
+	font-family: "Courier New"
+}
+
 .brush {
   float: left;
   margin: 6px;
   background: black;
+  border: 1px solid black;
   border-radius: 50%;
 }
 
@@ -115,18 +130,24 @@ canvas {
 }
 
 .medium {
+  width: 15px;
+  height: 15px;
+}
+
+.medium2 {
   width: 20px;
   height: 20px;
 }
 
 .large {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
 }
 
 .current_brush {
   width: 30px;
   height: 30px;
+  margin-left: 25%;
 }
 
 .slider {
@@ -151,6 +172,6 @@ canvas {
   width: 15px;
   height: 15px;
   border-radius: 50%; 
-  background: black;
+  background: white;
   cursor: pointer;
 }

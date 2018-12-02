@@ -14,7 +14,7 @@
     </div>
 
     <div class="container">
-      <div id="colorpanel">
+      <div id="inputpanel">
         <center><p style="margin-block-end: 0">Current Brush</p></center>
         <div id="contain" style="height: 50px">
           <div class="brush current_brush" id="current_brush"></div>
@@ -53,7 +53,7 @@
         <center><p style="margin-block-end: 0">Color Picker</p></center>
         <div>
           <center>
-            <input class="jscolor" value="000000" style="width:50px; height:20px; border: 1px solid black" onchange="changeColors(this.jscolor)">
+            <input class="jscolor" value="000000" onchange="changeColors(this.jscolor)">
           </center>
         </div>
 
@@ -61,6 +61,7 @@
         <div id="contain">
           <div class="brush small" id="small" onclick="changeBrushSize(this)"></div>
           <div class="brush medium" id="medium" onclick="changeBrushSize(this)"></div>
+          <div class="brush medium2" id="medium2" onclick="changeBrushSize(this)"></div>
           <div class="brush large" id="large" onclick="changeBrushSize(this)"></div>
         </div>
 
