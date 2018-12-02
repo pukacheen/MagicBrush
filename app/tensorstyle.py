@@ -50,30 +50,32 @@ class TransformNet:
         # initialize session
         # Launch the graph in a session that allows soft device placement and
         # logs the placement decisions.
-        sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
-                                        log_device_placement=True))
+        self.graph = tf.Graph()
+        self.sess = tf.Session(graph=self.graph,
+            config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
 
         # create the network
-        img_placeholder = tf.placeholder(tf.float32, shape=self.batch_shape, name='img_placeholder')
-        preds = transform.net(img_placeholder)
+        with self.graph.as_default():
+            img_placeholder = tf.placeholder(tf.float32, shape=self.batch_shape, name='img_placeholder')
+            preds = transform.net(img_placeholder)
 
-        # load weights from checkpoint
-        saver = tf.train.Saver()
-        if os.path.isdir(checkpoint_dir):
-            ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
-            if ckpt and ckpt.model_checkpoint_path:
-                saver.restore(sess, ckpt.model_checkpoint_path)
+            # load weights from checkpoint
+            saver = tf.train.Saver()
+            if os.path.isdir(checkpoint_dir):
+                ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+                if ckpt and ckpt.model_checkpoint_path:
+                    saver.restore(self.sess, ckpt.model_checkpoint_path)
+                else:
+                    raise Exception("No checkpoint found...")
             else:
-                raise Exception("No checkpoint found...")
-        else:
-            raise Exception("No model found!")
+                raise Exception("No model found!")
 
-        # save these so we can use them later
-        self.sess = sess
-        self.preds = preds
-        self.img_placeholder = img_placeholder
+            # save these so we can use them later
+            self.preds = preds
+            self.img_placeholder = img_placeholder
 
-        print("yo, u got a transform net")
+            print("yo, u got a transform net")
+            
         self.i = 0
         # do stuff
 
