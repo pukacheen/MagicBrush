@@ -3,9 +3,11 @@ body {
 	padding: 0;
 	/* overflow: hidden; /* Prevent scrolling on the page */ */
 }
+
 button {
 	display: block;
 }
+
 canvas {
 	margin: 0;
 	padding: 0;
@@ -16,6 +18,7 @@ canvas {
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .container > * {
   margin: 5px;
 }
@@ -23,6 +26,7 @@ canvas {
 #mycanvas {
 	border: 2px solid blue;
 }
+
 #mycanvas2 {
 	border: 2px solid green;
 }
@@ -52,7 +56,7 @@ canvas {
 
 #colorpanel {
   width: 130px;
-  height: 480px;
+  height: 640px;
   float: left;
   margin-right: 18px;
   border: 1px solid black;
@@ -60,7 +64,6 @@ canvas {
 
 #contain {
   padding-left: 13px;
-  height: 320px;
 }
 
 .palette {
@@ -119,4 +122,35 @@ canvas {
 .large {
   width: 30px;
   height: 30px;
+}
+
+.current_brush {
+  width: 30px;
+  height: 30px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: grey;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  background: black;
+  cursor: pointer;
 }
