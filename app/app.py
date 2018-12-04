@@ -8,44 +8,69 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-#_ DEVELOPMENT PURPOSES ONLY
-# set to None if you don't want to load the TransformNet (ie, for fast testing of the front end)
-emperor_penguin = 1
-
 availableStyles = ['rain_princess', 'wave', 'lion', 'miro', 'spectacle', 'vangogh']
-
 currentStyle = 'rain_princess'
 stylizers = {}
 
-def loadTransformNet(name):
-    if emperor_penguin is not None:
+preload_all_networks = True
+
+# set to False if you don't want to load the neural networks
+tf_enabled = True
+
+
+def lazyload(name):
+    if name not in stylizers or stylizers[name] is None:
         print("Loading {}...".format(name))
         stylizers[name] = TransformNet(name)
+    return stylizers[name]
 
-def populateStyles():
-    if emperor_penguin is not None:
-        for t in availableStyles:
-            loadTransformNet(t)
+if preload_all_networks:
+    for t in availableStyles:
+        try:
+            lazyload(t)
+        except:
+            print('{} does not exist')
 
-populateStyles()
+known_users = []
+def get_user(id):
+    global known_users
+    if id not in known_users:
+        known_users.append(id)
+
+    return known_users.index(id)
+
+
 points = []
+def clear_points():
+    global points
+    points = []
+
+
+def undo_last_points(uid):
+    global points
+    x = [p for p in reversed(points) if p['uid'] == uid]
+    last_points_by_user = x[:10]
+    points = [p for p in points if p not in last_points_by_user]
+
+
+def update_status(msg):
+    print(msg)
+    emit('trivia', msg, broadcast=True)
+
+
+# pages of the app
 
 @app.route('/')
 def get_index():
-     return render_template('index.html')
+    return render_template('index.html')
 
-@app.context_processor
-def override_url_for():
-    return dict(url_for=dated_url_for)
 
-def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
-        if filename:
-            file_path = os.path.join(app.root_path,
-                                     endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
-    return url_for(endpoint, **values)
+@app.route('/vis')
+def get_visualization():
+    return render_template('visualization.html')
+
+
+# listens to these events
 
 @socketio.on('connect')
 def client_connected():
@@ -55,37 +80,27 @@ def client_connected():
 
 @socketio.on('clear')
 def clear():
-    global points
-    print('ok')
-    points = []
+    clear_points()
     emit('new data', points, broadcast=True)
+
 
 @socketio.on('undo')
 def undo(data):
-    global points
-
-    uid = data['uid']
-
-    start = time.time()
-    last_points_by_user = [p for p in reversed(points) if p['uid'] == uid][:10]
-    points = [p for p in points if p not in last_points_by_user]
-    end = time.time() - start
-    print('<==== undoing {} took {} seconds'.format(uid, end))
+    user = get_user(data['uid'])
+    update_status('user {} used UNDO'.format(user))
+    
+    undo_last_points(data['uid'])
     emit('new data', points, broadcast=True)
 
-known_users = []
+
 @socketio.on('draw')
 def update_drawing(data):
-    if data['uid'] not in known_users:
-        known_users.append(data['uid'])
-
-    user = known_users.index(data['uid'])
-    msg = "user {} drew on the canvas [{} total points]".format(user, len(points))
-    print(msg)
-    emit('trivia', msg, broadcast=True)
+    user = get_user(data['uid'])
+    update_status("user {} drew on the canvas [{} total points]".format(user, len(points)))
 
     points.append(data)
     emit('draw', data, broadcast=True)
+
 
 @socketio.on('image')
 def receive_image(package):
@@ -95,15 +110,14 @@ def receive_image(package):
         'uid': uid
     })
 
-    if currentStyle not in stylizers or stylizers[currentStyle] is None:
-        loadTransformNet(currentStyle)
-
-    if emperor_penguin is not None:
+    if tf_enabled:
         base64_picture = data.split(',')[1]
-        original, result = stylizers[currentStyle].decode(base64_picture)
+        original, result = lazyload(currentStyle).decode(base64_picture)
+        
         # print('Sending...', 'data:image/png;base64,' + result[:10])
         emit('result', 'data:image/png;base64,' + result)
         emit('original', 'data:image/png;base64,' + original)
+
 
 @socketio.on('change_style')
 def update_style(data):
@@ -116,7 +130,37 @@ def update_style(data):
         currentStyle = styleName
     else:
         print("Don't hack the front end to send me bogus styles")
-        
+       
+
+@socketio.on('vis_upload_image')
+def visualization_image_upload(data):
+    img, uid = data['image'], data['uid']
+    
+    # transforms the image, runs it thorugh VGG, computes the loss
+    if tf_enabled:
+        base64_picture = data.split(',')[1]
+        losses, result = lazyload(currentStyle).compute_losses(base64_picture)
+        emit('vis_image_result', 'data:image/png;base64,' + result)
+        emit('vis_loss_result', losses)
+
+
+# appending the time to resources avoids the flask bug of using cached resources
+
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     endpoint, filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
+
+
 
 if __name__ == '__main__':
     print("all right, i ran")

@@ -36,6 +36,21 @@ def encode(pixels):
 
     return img_str
 
+
+def base64_to_array(base64img, size):
+    # the bytes of the image ---> np array
+    image_64_decode = base64.decodebytes(base64img.encode('utf-8'))
+    image = Image.open(BytesIO(image_64_decode))
+
+    # resize, and convert to RGB
+    image = image.resize(size, Image.ANTIALIAS)
+    image = image.convert('RGB')
+
+    nparr = np.array(image)
+    nparr = nparr[:,:,:3]
+    return nparr
+
+
 class TransformNet:
 
     def __init__(self, name='wave'):
@@ -46,7 +61,7 @@ class TransformNet:
         self.img_shape = [512, 512, 3]
         self.batch_shape = [batch_size] + self.img_shape
         self.checkpoint_dir = checkpoint_dir
-
+        
         # initialize session
         # Launch the graph in a session that allows soft device placement and
         # logs the placement decisions.
@@ -66,20 +81,24 @@ class TransformNet:
                 if ckpt and ckpt.model_checkpoint_path:
                     saver.restore(self.sess, ckpt.model_checkpoint_path)
                 else:
-                    raise Exception("No checkpoint found...")
+                    print("No checkpoint found...")
             else:
-                raise Exception("No model found!")
+                print("No model found!")
 
             # save these so we can use them later
             self.preds = preds
             self.img_placeholder = img_placeholder
 
-            print("yo, u got a transform net")
-            
-        self.i = 0
-        # do stuff
+            print("yo, u got a transform net")            
+    
 
     def run_network(self, image):
+        """
+        image - np.array
+
+        Returns:
+        - predictions from the neural network
+        """
         X = np.zeros(self.batch_shape, dtype=np.float32)
         X[0] = image
 
@@ -87,18 +106,9 @@ class TransformNet:
         _preds = np.clip(_preds[0], 0, 255).astype(np.uint8)
         return _preds
 
+
     def decode(self, base64img):
-
-        # the bytes of the image ---> np array
-        image_64_decode = base64.decodebytes(base64img.encode('utf-8'))
-        image = Image.open(BytesIO(image_64_decode))
-
-        # resize, and convert to RGB
-        image = image.resize(self.img_shape[:2], Image.ANTIALIAS)
-        image = image.convert('RGB')
-
-        nparr = np.array(image)
-        nparr = nparr[:,:,:3]
+        nparr = base64_to_array(base64img, self.img_shape[:2])
 
         start = time()
         result = self.run_network(nparr)
@@ -110,6 +120,3 @@ class TransformNet:
         return encode(nparr), encode(result)
 
 
-    def close(self):
-        self.sess.close()
-        print('Session closed!')
