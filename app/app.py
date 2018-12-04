@@ -151,7 +151,7 @@ def visualization_image_upload(data):
     
     # transforms the image, runs it thorugh VGG, computes the loss
     if tf_enabled:
-        base64_picture = data.split(',')[1]
+        base64_picture = img.split(',')[1]
         original, result = lazyload(currentStyle).decode(base64_picture)
         
         # compute losses
