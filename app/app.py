@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for
 from flask_socketio import SocketIO, send, emit
 from tensorstyle import TransformNet
 import time, os
+import numpy as np
 
 app = Flask(__name__, static_url_path='')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -12,7 +13,8 @@ availableStyles = ['rain_princess', 'wave', 'lion', 'miro', 'spectacle', 'vangog
 currentStyle = 'rain_princess'
 stylizers = {}
 
-preload_all_networks = True
+# for the visualization page
+vgg = None
 
 # set to False if you don't want to load the neural networks
 tf_enabled = True
@@ -24,12 +26,23 @@ def lazyload(name):
         stylizers[name] = TransformNet(name)
     return stylizers[name]
 
-if preload_all_networks:
+
+def lazyload_VGG():
+    global vgg
+    if vgg is None:
+        from tensorstyle import VGGNet
+        vgg = VGGNet()
+    return vgg
+
+def preloadNetworks():
     for t in availableStyles:
         try:
             lazyload(t)
         except:
             print('{} does not exist')
+
+lazyload('rain_princess')
+lazyload_VGG()
 
 known_users = []
 def get_user(id):
@@ -118,6 +131,13 @@ def receive_image(package):
         emit('result', 'data:image/png;base64,' + result)
         emit('original', 'data:image/png;base64,' + original)
 
+        # does this work?
+        # compute losses
+        v = lazyload_VGG()
+        start = time.time()
+        losses1, losses2 = v.run(original), v.run(result)
+        losses = [np.linalg.norm(a - b) / a.size for a,b in zip(losses1, losses2)]
+        print(losses, time.time() - start)
 
 @socketio.on('change_style')
 def update_style(data):
@@ -139,7 +159,15 @@ def visualization_image_upload(data):
     # transforms the image, runs it thorugh VGG, computes the loss
     if tf_enabled:
         base64_picture = data.split(',')[1]
-        losses, result = lazyload(currentStyle).compute_losses(base64_picture)
+        original, result = lazyload(currentStyle).decode(base64_picture)
+        
+        # compute losses
+        v = lazyload_VGG()
+        losses1, losses2 = v.run(original), v.run(result)
+
+        # do something here
+        print(losses)
+        
         emit('vis_image_result', 'data:image/png;base64,' + result)
         emit('vis_loss_result', losses)
 

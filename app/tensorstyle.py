@@ -6,6 +6,7 @@ from PIL import Image
 
 import tensorflow as tf
 import transform
+import vgg
 
 import scipy.misc
 import numpy as np
@@ -37,7 +38,9 @@ def encode(pixels):
     return img_str
 
 
-def base64_to_array(base64img, size):
+def decode(base64img, size):
+    """returns an np array of the specified size
+    """
     # the bytes of the image ---> np array
     image_64_decode = base64.decodebytes(base64img.encode('utf-8'))
     image = Image.open(BytesIO(image_64_decode))
@@ -50,6 +53,64 @@ def base64_to_array(base64img, size):
     nparr = nparr[:,:,:3]
     return nparr
 
+class VGGNet:
+    """Loads VGG, and gives you the option to get the style features from an image
+    """
+
+    def __init__(self):
+        batch_size = 1
+
+        self.img_shape = [224, 224, 3]
+        self.batch_shape = [batch_size] + self.img_shape
+        
+        # we'll download VGG into the /data folder
+        vgg_path = 'data/imagenet-vgg-verydeep-19.mat'
+      
+        self.STYLE_LAYERS = ('relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1')
+        self.CONTENT_LAYER = 'relu4_2'
+       
+        # load VGG network
+        self.graph = tf.Graph()
+        self.sess = tf.Session(graph=self.graph)
+        with self.graph.as_default():
+            img_placeholder = tf.placeholder(tf.float32, shape=self.batch_shape, name='style_img_placeholder')
+            style_image_pre = vgg.preprocess(img_placeholder)
+            
+            # vgg.py gives us a dictionary of tensorflow ops
+            net = vgg.net(vgg_path, style_image_pre)
+            
+            # define operations to get the feature gram matrices
+            self.style_grams = []
+            for f in self.STYLE_LAYERS:
+                layer = net[f]
+                bs, height, width, filters = map(lambda i:i.value, layer.get_shape())
+                size = height * width * filters
+                feats = tf.reshape(layer, (bs, height * width, filters))
+                feats_T = tf.transpose(feats, perm=[0,2,1])
+                grams = tf.matmul(feats_T, feats) / size
+                self.style_grams.append(grams)
+
+            self.content_grams = [net[self.CONTENT_LAYER]]
+
+            # save these so we can use them later
+            self.img_placeholder = img_placeholder
+
+            print("yo, got a VGG network!")
+
+
+    def get_gram_values(self, img):
+        X = np.zeros(self.batch_shape, dtype=np.float32)
+        X[0] = img
+
+        gram_values = self.sess.run(self.style_grams + self.content_grams, \
+                feed_dict={self.img_placeholder: X})
+        return gram_values
+        
+    
+    def run(self, img):
+        img = decode(img, self.img_shape[:2])
+        grams = self.get_gram_values(img)
+        return grams
 
 class TransformNet:
 
@@ -108,7 +169,7 @@ class TransformNet:
 
 
     def decode(self, base64img):
-        nparr = base64_to_array(base64img, self.img_shape[:2])
+        nparr = decode(base64img, self.img_shape[:2])
 
         start = time()
         result = self.run_network(nparr)
@@ -119,4 +180,8 @@ class TransformNet:
         
         return encode(nparr), encode(result)
 
+if __name__ == "__main__":
+    # test VGGNet
+    net = VGGNet()
+    print("successfully loaded!")
 
