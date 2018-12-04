@@ -26,12 +26,6 @@ canvas.addEventListener('mousedown', sendCoordinates(canvas, startDrawing));
 canvas.addEventListener('mousemove', sendCoordinates(canvas, drawStuff));
 canvas.addEventListener('mouseup', sendCoordinates(canvas, stopDrawing));
 
-// Listen for mouse events on the canvas element
-var canvas2 = document.getElementById('mycanvas2');
-canvas2.addEventListener('mousedown', sendCoordinates(canvas2, startDrawing));
-canvas2.addEventListener('mousemove', sendCoordinates(canvas2, drawStuff));
-canvas2.addEventListener('mouseup', sendCoordinates(canvas2, stopDrawing));
-
 // Initializing variables for tracking user input
 var isDrawing = false;
 var lastSent;
@@ -221,31 +215,6 @@ socket.on('connect', function(){
 	console.log("Robot 1, reporting for duty!");
 });
 
-socket.on('new data', function(data){
-	console.log("received data from other clients!");
-	console.log(data);
-	redrawPoints(data);
-});
-
-socket.on('draw', function(data){
-	var point = data;
-	// incremental updates detect if it's the same user
-	if (point.uid != uid){
-		marchPaint({
-			x: point.fromX,
-			y: point.fromY
-		}, {
-			x: point.toX,
-			y: point.toY
-		}, {
-			size: point.brush_size,
-			transparency: point.brush_transparency,
-			color: point.color
-		});
-	}
-})
-
-
 
 /*
 *
@@ -284,13 +253,6 @@ socket.on('result', function(data){
 	imgResult.src = data;
 	redrawResult();
 })
-
-socket.on('original', function(data){
-	imgOriginal.src = data;
-	redrawResult();
-
-})
-
 
 
 /*

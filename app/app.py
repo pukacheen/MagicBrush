@@ -131,13 +131,6 @@ def receive_image(package):
         emit('result', 'data:image/png;base64,' + result)
         emit('original', 'data:image/png;base64,' + original)
 
-        # does this work?
-        # compute losses
-        v = lazyload_VGG()
-        start = time.time()
-        losses1, losses2 = v.run(original), v.run(result)
-        losses = [np.linalg.norm(a - b) / a.size for a,b in zip(losses1, losses2)]
-        print(losses, time.time() - start)
 
 @socketio.on('change_style')
 def update_style(data):
@@ -163,10 +156,10 @@ def visualization_image_upload(data):
         
         # compute losses
         v = lazyload_VGG()
+        start = time.time()
         losses1, losses2 = v.run(original), v.run(result)
-
-        # do something here
-        print(losses)
+        losses = [np.linalg.norm(a - b) / a.size for a,b in zip(losses1, losses2)]
+        print(losses, time.time() - start)
         
         emit('vis_image_result', 'data:image/png;base64,' + result)
         emit('vis_loss_result', losses)
