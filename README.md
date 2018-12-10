@@ -14,21 +14,5 @@ Neural Style Transfer is a (3 years) old magic which has become quite popular, b
 1. [Setting up and using our app locally with a Virtual Machine on Google Cloud Platform](https://github.com/pukacheen/MagicBrush/wiki/Setting-up-and-using-a-Virtual-Machine-on-Google-Cloud-Platform)
 2. [Deploying the project on a GCP VM - say hi to the Internet!](https://github.com/pukacheen/MagicBrush/wiki/Deploying-the-project-on-a-GCP-VM)
 
-# Todo
-
-## Multiple users making style requests
-- done!
-
-## Making the network faster
-- done!
-
-## Making the network better
-- done!
-
 ## For our own record
-It's 5:15AM, Sunday 12/02/2018. Our app is finally on the internet! http://35.247.115.136:5000/
-The tricks are:
-- Have a static external IP adress associated with the VM.
-- Add firewal rules to allow ingress traffic on port 80, 443, and 5000.
-- Make sure there's a default route whose next hop is "Default internet gateway" and allows destination IP ranges 0.0.0.0/0.
-- Run "FLASK_APP=app.py flask run --host=0.0.0.0" (note the host flag)
+It's 5:15AM, Sunday 12/02/2018. 3 hours until the end of YHack 2018. Our app is finally on the internet! http://35.247.115.136:5000/
