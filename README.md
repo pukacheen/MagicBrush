@@ -15,4 +15,5 @@ Neural Style Transfer is a (3 years) old magic which has become quite popular, b
 2. [Deploying the project on a GCP VM - say hi to the Internet!](https://github.com/pukacheen/MagicBrush/wiki/Deploying-the-project-on-a-GCP-VM)
 
 ## For our own record
-It's 5:15AM, Sunday 12/02/2018. 3 hours until the end of YHack 2018. Our app is finally on the internet! http://35.247.115.136:5000/
+* It's 5:15AM, Sunday 12/02/2018. 3 hours until the end of YHack 2018. Our app is finally on the internet! http://35.247.115.136:5000/
+* Update: We won "Best use of Google Cloud Platform"!
