@@ -11,7 +11,8 @@ Neural Style Transfer is a (3 years) old magic which has become quite popular, b
 <img src="docs/hi3.png">
 
 # To get started, check out these wiki pages!
-[Setting up and using our app with a Virtual Machine on Google Cloud Platform](https://github.com/pukacheen/MagicBrush/wiki/Setting-up-and-using-a-Virtual-Machine-on-Google-Cloud-Platform)
+1. [Setting up and using our app locally with a Virtual Machine on Google Cloud Platform](https://github.com/pukacheen/MagicBrush/wiki/Setting-up-and-using-a-Virtual-Machine-on-Google-Cloud-Platform)
+2. [Deploying the project on a GCP VM - say hi to the Internet!](https://github.com/pukacheen/MagicBrush/wiki/Deploying-the-project-on-a-GCP-VM)
 
 # Todo
 
